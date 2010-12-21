@@ -20,6 +20,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs.circuit.builder.Builder;
@@ -35,16 +36,87 @@ import fr.unice.miage.vroomaniacs.circuit.element.Element;
 
 @SuppressWarnings("serial")
 public class EditeurCircuit extends JFrame {
-	/** Le builder */
-	private static Builder builder = new BuilderElement();
+	/** Le nombre de lignes et de colonnes de la grille */
+	private int m_nbLignes, m_nbColonnes;
+	/** Le builder utiliser pour construire les &eacute;l&eacute;ments du circuit */
+	private static Builder builder;
+	/** Le panel contenant les items pour l'&eacute;dition du cricuit. */
+	private JPanel m_panelLabels;
 	/** Le panel contenant les &eacute;l&eacute;ments du circuit */
 	private JPanel m_panelGrid;
 	
+	/**
+	 * Constructeur.
+	 * 
+	 * @param p_nbLignes	le nombre de lignes de la grille
+	 * @param p_nbColonnes	le nombre de colonnes de la grille
+	 */
 	public EditeurCircuit(int p_nbLignes, int p_nbColonnes) {
+		this.m_nbLignes = p_nbLignes;
+		this.m_nbColonnes = p_nbColonnes;
+		
 		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
+
+		this.construireMenuBar();
 		
+		JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		this.add(panelNorth, BorderLayout.NORTH);
+		
+		JPanel panelCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JScrollPane scrollPaneCenter = new JScrollPane(panelCenter);
+		scrollPaneCenter.setPreferredSize(new Dimension(420, 420));
+		this.add(scrollPaneCenter, BorderLayout.CENTER);
+		
+		GridLayout gridLabels = new GridLayout(1,8);
+		gridLabels.setHgap(10);
+		this.m_panelLabels = new JPanel(gridLabels);
+		panelNorth.add(this.m_panelLabels);
+		
+		this.m_panelGrid = new JPanel(new GridLayout(this.m_nbLignes, this.m_nbColonnes));
+		panelCenter.add(this.m_panelGrid);
+		
+		this.ajouterItemCircuit("./images/route-horizontale.png", new BuilderRouteH());
+		this.ajouterItemCircuit("./images/route-verticale.png", new BuilderRouteV());
+		this.ajouterItemCircuit("./images/virage-inferieur-droit.png", new BuilderVirageID());
+		this.ajouterItemCircuit("./images/virage-inferieur-gauche.png", new BuilderVirageIG());
+		this.ajouterItemCircuit("./images/virage-superieur-droit.png", new BuilderVirageSD());
+		this.ajouterItemCircuit("./images/virage-superieur-gauche.png", new BuilderVirageSG());
+		this.ajouterItemCircuit("./images/route-depart.png", new BuilderRouteDepart());
+		this.ajouterItemCircuit("./images/gomme.png", new BuilderElement());
+		
+		this.construireGrilleParDefaut();
+		
+		this.pack();
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((screenSize.width-this.getSize().width)/2,(screenSize.height-this.getSize().height)/2);
+		
+		this.setVisible(true);
+	}
+	
+	/**
+	 * Construit la grille par d&eacute;faut avec des &eacute;l&eacute;ments neutres.
+	 */
+	private void construireGrilleParDefaut() {
+		builder = new BuilderElement();
+		Circuit.getInstance().clearElements();
+		
+		for(int x=0;x<this.m_nbLignes;x++) {
+			for(int y=0;y<this.m_nbColonnes;y++) {
+				builder.creerElement(this,x + "_" + y);
+				this.m_panelGrid.add(builder.getElement());
+				
+				Circuit.getInstance().addElement(builder.getElement());
+			}
+		}
+	}
+
+	/**
+	 * Construit la barre de menu de l'&eacute;diteur de circuit.
+	 */
+	private void construireMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 		
@@ -56,15 +128,23 @@ public class EditeurCircuit extends JFrame {
 		itemSauvegarder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				int returnVal = fc.showSaveDialog(EditeurCircuit.this);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					System.out.println("Sauvegarde dans le fichier " + file.getName() + "...");
+				if(Circuit.getInstance().estValide()) {
+					System.out.println("Circuit valide.");
+					JFileChooser fc = new JFileChooser();
+					int returnVal = fc.showSaveDialog(EditeurCircuit.this);
+					if(returnVal == JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						System.out.println("Sauvegarde dans le fichier " + file.getName() + "...");
+					}
+				}
+				else {
+					System.out.println("Circuit non valide.");
 				}
 			}
 		});
+		
 		menuFichier.addSeparator();
+		
 		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/quitter.png")));
 		menuFichier.add(itemQuitter);
 		itemQuitter.addActionListener(new ActionListener() {
@@ -74,26 +154,47 @@ public class EditeurCircuit extends JFrame {
 			}
 		});
 		
-		JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		this.add(panelNorth, BorderLayout.NORTH);
+		JMenu menuEdition = new JMenu("Edition");
+		menuBar.add(menuEdition);
 		
-		JPanel panelCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		this.add(panelCenter, BorderLayout.CENTER);
+		JMenuItem itemChangerTailleGrille = new JMenuItem("Changer la taille de la grille", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/resize.png")));
+		menuEdition.add(itemChangerTailleGrille);
+		itemChangerTailleGrille.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EditeurCircuit.this.setVisible(false);
+				new MenuEditeurCircuit();
+			}
+		});
 		
-		GridLayout gridLabels = new GridLayout(1,8);
-		gridLabels.setHgap(10);
-		JPanel panelLabels = new JPanel(gridLabels);
-		panelNorth.add(panelLabels);
-		
-		this.m_panelGrid = new JPanel(new GridLayout(p_nbLignes, p_nbColonnes));
-		panelCenter.add(this.m_panelGrid);
-		
-		JLabel lblRh = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/route-horizontale.png")));
-		panelLabels.add(lblRh);
-		lblRh.addMouseListener(new MouseListener() {
+		JMenuItem itemNettoyerGrille = new JMenuItem("Nettoyer la grille", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/clear.png")));
+		menuEdition.add(itemNettoyerGrille);
+		itemNettoyerGrille.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EditeurCircuit.this.construireGrilleParDefaut();
+				EditeurCircuit.this.repaint();
+			}
+		});
+	}
+	
+	/**
+	 * Ajoute un item pour l'&eacute;dition de circuit.
+	 * 
+	 * @param p_urlImage	l'URL de l'image &agrave; utiliser pour repr&eacute;senter l'item
+	 * @param p_builder		le builder &agrave; utiliser pour cr&eacute; l'&eacute;l&eacute;ment dans le circuit
+	 */
+	private void ajouterItemCircuit(String p_urlImage, final Builder p_builder) {
+		JLabel label = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(p_urlImage)));
+		String name = p_urlImage.split("/")[p_urlImage.split("/").length-1];
+		name = name.replaceAll("-"," ");
+		name = name.substring(0, name.length()-4);
+		label.setToolTipText(name.toUpperCase());
+		this.m_panelLabels.add(label);
+		label.addMouseListener(new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				builder = new BuilderRouteH();
+				builder = p_builder;
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -105,148 +206,6 @@ public class EditeurCircuit extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {}
 		});
-		
-		JLabel lblRv = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/route-verticale.png")));
-		panelLabels.add(lblRv);
-		lblRv.addMouseListener(new MouseListener() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				builder = new BuilderRouteV();
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-		
-		JLabel lblVid = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/virage-inferieur-droit.png")));
-		panelLabels.add(lblVid);
-		lblVid.addMouseListener(new MouseListener() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				builder = new BuilderVirageID();
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-		
-		JLabel lblVig = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/virage-inferieur-gauche.png")));
-		panelLabels.add(lblVig);
-		lblVig.addMouseListener(new MouseListener() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				builder = new BuilderVirageIG();
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-		
-		JLabel lblVsd = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/virage-superieur-droit.png")));
-		panelLabels.add(lblVsd);
-		lblVsd.addMouseListener(new MouseListener() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				builder = new BuilderVirageSD();
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-		
-		JLabel lblVsg = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/virage-superieur-gauche.png")));
-		panelLabels.add(lblVsg);
-		lblVsg.addMouseListener(new MouseListener() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				builder = new BuilderVirageSG();
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-		
-		JLabel lblRd = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/route-depart.png")));
-		panelLabels.add(lblRd);
-		lblRd.addMouseListener(new MouseListener() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				builder = new BuilderRouteDepart();
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-		
-		JLabel lblGomme = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/gomme.png")));
-		panelLabels.add(lblGomme);
-		lblGomme.addMouseListener(new MouseListener() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				builder = new BuilderElement();
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-		
-		for(int x=0;x<p_nbLignes;x++) {
-			for(int y=0;y<p_nbColonnes;y++) {
-				builder.creerElement(this,x + "_" + y);
-				this.m_panelGrid.add(builder.getElement());
-				
-				Circuit.getInstance().addElement(builder.getElement());
-			}
-		}
-		
-		this.pack();
-		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation((screenSize.width-this.getSize().width)/2,(screenSize.height-this.getSize().height)/2);
-		
-		this.setVisible(true);
 	}
 	
 	/**
