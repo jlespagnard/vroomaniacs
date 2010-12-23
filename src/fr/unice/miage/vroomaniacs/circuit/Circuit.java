@@ -113,35 +113,32 @@ public class Circuit implements Iterable<Element> {
 			return false;
 		}
 		
-		boolean estValide = false;
 		Point ouest,nord,est,sud;
 		for(Element elem : this) {
 			if(estElementRouteOuVirage(elem)) {
 				ouest = Utils.getPointOuest(elem);
 				if(ouest != null) {
-					estValide = this.testConnexion(elem, ouest);
+					if(!this.testConnexion(elem,ouest))
+						return false;
 				}
-				if(estValide) {
-					nord = Utils.getPointNord(elem);
-					if(nord != null) {
-						estValide = this.testConnexion(elem, nord);
-					}
+				nord = Utils.getPointNord(elem);
+				if(nord != null) {
+					if(!this.testConnexion(elem,nord))
+						return false;
 				}
-				if(estValide) {
-					est = Utils.getPointEst(elem);
-					if(est != null) {
-						estValide = this.testConnexion(elem, est);
-					}
+				est = Utils.getPointEst(elem);
+				if(est != null) {
+					if(!this.testConnexion(elem,est))
+						return false;
 				}
-				if(estValide) {
-					sud = Utils.getPointSud(elem);
-					if(sud != null) {
-						estValide = this.testConnexion(elem, sud);
-					}
+				sud = Utils.getPointSud(elem);
+				if(sud != null) {
+					if(!this.testConnexion(elem,sud))
+						return false;
 				}
 			}
 		}
-		return estValide;
+		return true;
 	}
 	
 	/**
