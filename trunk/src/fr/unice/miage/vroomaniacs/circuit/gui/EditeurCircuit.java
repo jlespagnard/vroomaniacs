@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -129,7 +130,6 @@ public class EditeurCircuit extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(Circuit.getInstance().estValide()) {
-					System.out.println("Circuit valide.");
 					JFileChooser fc = new JFileChooser();
 					int returnVal = fc.showSaveDialog(EditeurCircuit.this);
 					if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -138,7 +138,14 @@ public class EditeurCircuit extends JFrame {
 					}
 				}
 				else {
-					System.out.println("Circuit non valide.");
+					String messageErreur;
+					if(Circuit.getInstance().getElementDepart() == null) {
+						messageErreur = "Le circuit doit comporter un élément de départ.";
+					}
+					else {
+						messageErreur = "Le circuit doit être fermé.";
+					}
+					JOptionPane.showMessageDialog(EditeurCircuit.this,messageErreur,"Erreur de sauvegarde",JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
