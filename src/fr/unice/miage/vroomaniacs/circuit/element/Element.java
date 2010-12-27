@@ -2,8 +2,6 @@ package fr.unice.miage.vroomaniacs.circuit.element;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serializable;
@@ -21,22 +19,20 @@ import fr.unice.miage.vroomaniacs.circuit.gui.PointilleBorder;
  * @version	1.0
  */
 @SuppressWarnings("serial")
-public class Element extends JLabel implements Serializable, MouseListener {
+public abstract class Element extends JLabel implements IElement, Serializable, MouseListener {
 	public static final Dimension DIM = new Dimension(40,40);
 	
 	/** L'ID de l'&eacute;l&eacute;ment */
 	private String m_id;
 	/** L'&eacute;diteur de cricuit sur lequel se trouve l'&eacute;l&eacute;ment */
 	private EditeurCircuit m_editeur;
-	/** L'image repr&eacute;sentant l'&eacute;l&eacute;ment */
-	protected Image m_image;
 	
 	/**
 	 * Constructeur.
 	 * 
 	 * @param p_id
 	 */
-	public Element(EditeurCircuit p_editeur, String p_id) {
+	protected Element(EditeurCircuit p_editeur, Builder p_builder, String p_id) {
 		this.m_editeur = p_editeur;
 		this.m_id = p_id;
 		
@@ -48,27 +44,14 @@ public class Element extends JLabel implements Serializable, MouseListener {
 		this.setVerticalAlignment(JLabel.CENTER);
 		this.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		this.setAlignmentY(JLabel.CENTER_ALIGNMENT);
-		this.m_image = Toolkit.getDefaultToolkit().getImage("./images/font.png");
-		this.setIcon(new ImageIcon(this.m_image));
+		this.setIcon(new ImageIcon(p_builder.getImage()));
 		this.addMouseListener(this);
 	}
 	
-	/**
-	 * @return	l'ID de l'&eacute;l&eacute;ment
-	 */
+	@Override
 	public String getId() {
 		return this.m_id;
 	}
-	
-	/**
-	 * @return	l'image repr&eacute;sentant l'&eacute;l&eacute;ment
-	 */
-	public Image getImage() {
-		return this.m_image;
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {}
 
 	@Override
 	public void mousePressed(MouseEvent e) {		
@@ -81,11 +64,11 @@ public class Element extends JLabel implements Serializable, MouseListener {
 	}
 
 	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
 	public void mouseReleased(MouseEvent e) {}
-
 	@Override
 	public void mouseEntered(MouseEvent e) {}
-
 	@Override
 	public void mouseExited(MouseEvent e) {}
 }

@@ -8,9 +8,16 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FilenameFilter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -22,18 +29,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs.circuit.builder.Builder;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderElement;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderRouteDepart;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderRouteH;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderRouteV;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderVirageID;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderVirageIG;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderVirageSD;
-import fr.unice.miage.vroomaniacs.circuit.builder.BuilderVirageSG;
+import fr.unice.miage.vroomaniacs.circuit.builder.BuilderHerbe;
 import fr.unice.miage.vroomaniacs.circuit.element.Element;
+import fr.unice.miage.vroomaniacs.circuit.element.IElement;
 
 @SuppressWarnings("serial")
 public class EditeurCircuit extends JFrame {
@@ -70,7 +72,18 @@ public class EditeurCircuit extends JFrame {
 		scrollPaneCenter.setPreferredSize(new Dimension(420, 420));
 		this.add(scrollPaneCenter, BorderLayout.CENTER);
 		
-		GridLayout gridLabels = new GridLayout(1,8);
+		File file = new File("./bin/fr/unice/miage/vroomaniacs/circuit/builder");
+		FilenameFilter filter = new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String fileName) {
+				Pattern pat = Pattern.compile(".*class");
+				Matcher m = pat.matcher(fileName);
+				return m.matches();
+			}
+		};
+		String[] listFile = file.list(filter);
+		
+		GridLayout gridLabels = new GridLayout(1,listFile.length);
 		gridLabels.setHgap(10);
 		this.m_panelLabels = new JPanel(gridLabels);
 		panelNorth.add(this.m_panelLabels);
@@ -78,14 +91,32 @@ public class EditeurCircuit extends JFrame {
 		this.m_panelGrid = new JPanel(new GridLayout(this.m_nbLignes, this.m_nbColonnes));
 		panelCenter.add(this.m_panelGrid);
 		
-		this.ajouterItemCircuit("./images/route-horizontale.png", new BuilderRouteH());
-		this.ajouterItemCircuit("./images/route-verticale.png", new BuilderRouteV());
-		this.ajouterItemCircuit("./images/virage-inferieur-droit.png", new BuilderVirageID());
-		this.ajouterItemCircuit("./images/virage-inferieur-gauche.png", new BuilderVirageIG());
-		this.ajouterItemCircuit("./images/virage-superieur-droit.png", new BuilderVirageSD());
-		this.ajouterItemCircuit("./images/virage-superieur-gauche.png", new BuilderVirageSG());
-		this.ajouterItemCircuit("./images/route-depart.png", new BuilderRouteDepart());
-		this.ajouterItemCircuit("./images/gomme.png", new BuilderElement());
+		for(String fileName : listFile) {
+			String className = fileName.substring(0, fileName.length()-6);
+			className = "fr.unice.miage.vroomaniacs.circuit.builder." + className;
+			try {
+				System.out.println(className);
+				Class cl = Class.forName(className);
+				if((cl.getSuperclass() == Builder.class) && !cl.isInterface() && !Modifier.isAbstract(cl.getModifiers())) {
+					Constructor construct = cl.getConstructor(new Class[]{});
+					this.ajouterItemCircuit((Builder)construct.newInstance(new Object[]{}));
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		this.construireGrilleParDefaut();
 		
@@ -101,13 +132,13 @@ public class EditeurCircuit extends JFrame {
 	 * Construit la grille par d&eacute;faut avec des &eacute;l&eacute;ments neutres.
 	 */
 	private void construireGrilleParDefaut() {
-		builder = new BuilderElement();
+		builder = new BuilderHerbe();
 		Circuit.getInstance().clearElements();
 		
 		for(int x=0;x<this.m_nbLignes;x++) {
 			for(int y=0;y<this.m_nbColonnes;y++) {
 				builder.creerElement(this,x + "_" + y);
-				this.m_panelGrid.add(builder.getElement());
+				this.m_panelGrid.add((Element)builder.getElement());
 				
 				Circuit.getInstance().addElement(builder.getElement());
 			}
@@ -126,6 +157,7 @@ public class EditeurCircuit extends JFrame {
 		
 		JMenuItem itemSauvegarder = new JMenuItem("Sauvegarder", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/disquette.png")));
 		menuFichier.add(itemSauvegarder);
+		itemSauvegarder.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S,KeyEvent.CTRL_DOWN_MASK));
 		itemSauvegarder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -154,6 +186,7 @@ public class EditeurCircuit extends JFrame {
 		
 		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/quitter.png")));
 		menuFichier.add(itemQuitter);
+		itemQuitter.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_Q,KeyEvent.CTRL_DOWN_MASK));
 		itemQuitter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -166,6 +199,7 @@ public class EditeurCircuit extends JFrame {
 		
 		JMenuItem itemChangerTailleGrille = new JMenuItem("Changer la taille de la grille", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/resize.png")));
 		menuEdition.add(itemChangerTailleGrille);
+		itemChangerTailleGrille.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_N,KeyEvent.CTRL_DOWN_MASK));
 		itemChangerTailleGrille.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -176,6 +210,7 @@ public class EditeurCircuit extends JFrame {
 		
 		JMenuItem itemNettoyerGrille = new JMenuItem("Nettoyer la grille", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/clear.png")));
 		menuEdition.add(itemNettoyerGrille);
+		itemNettoyerGrille.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_DOWN_MASK));
 		itemNettoyerGrille.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -191,13 +226,16 @@ public class EditeurCircuit extends JFrame {
 	 * @param p_urlImage	l'URL de l'image &agrave; utiliser pour repr&eacute;senter l'item
 	 * @param p_builder		le builder &agrave; utiliser pour cr&eacute; l'&eacute;l&eacute;ment dans le circuit
 	 */
-	private void ajouterItemCircuit(String p_urlImage, final Builder p_builder) {
-		JLabel label = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(p_urlImage)));
-		String name = p_urlImage.split("/")[p_urlImage.split("/").length-1];
+	private void ajouterItemCircuit(final Builder p_builder) {
+		JLabel label = new JLabel(new ImageIcon(p_builder.getImage()));
+
+		String name = p_builder.getUrlImage();
+		name = name.split("/")[name.split("/").length-1];
 		name = name.replaceAll("-"," ");
 		name = name.substring(0, name.length()-4);
 		label.setToolTipText(name.toUpperCase());
 		this.m_panelLabels.add(label);
+		
 		label.addMouseListener(new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -228,8 +266,8 @@ public class EditeurCircuit extends JFrame {
 		if(this.m_panelGrid != null) {
 			this.m_panelGrid.removeAll();
 			
-			for(Element elem : Circuit.getInstance()) {
-				this.m_panelGrid.add(elem);
+			for(IElement elem : Circuit.getInstance()) {
+				this.m_panelGrid.add((Element)elem);
 			}
 		}
 		this.validate();
