@@ -8,25 +8,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fr.unice.miage.vroomaniacs.circuit.element.Element;
-import fr.unice.miage.vroomaniacs.circuit.element.RouteDepart;
-import fr.unice.miage.vroomaniacs.circuit.element.RouteH;
-import fr.unice.miage.vroomaniacs.circuit.element.RouteV;
-import fr.unice.miage.vroomaniacs.circuit.element.VirageID;
-import fr.unice.miage.vroomaniacs.circuit.element.VirageIG;
-import fr.unice.miage.vroomaniacs.circuit.element.VirageSD;
-import fr.unice.miage.vroomaniacs.circuit.element.VirageSG;
+import fr.unice.miage.vroomaniacs.circuit.element.IElement;
+import fr.unice.miage.vroomaniacs.circuit.element.IRoute;
 import fr.unice.miage.vroomaniacs.utils.Utils;
 
 /**
  * @author Julien Lespagnard
  * @version 1.0
  */
-public class Circuit implements Iterable<Element> {
+public class Circuit implements Iterable<IElement> {
 	/** Liste des &eacute;l&eacute;ments composant le circuit.<br />
 	 *  Les &eacute;l&eacute;ments sont rang&eacute;s par ligne puis par colonne.
 	 */
-	private Map<String, Element> m_elements;
+	private Map<String, IElement> m_elements;
 	/** ID de l'&eacute;l&eacute;ment de d&eacute;part du cricuit. */
 	private String m_idElementDepart = null;
 	
@@ -34,7 +28,7 @@ public class Circuit implements Iterable<Element> {
 	 * Constructeur.
 	 */
 	private Circuit() {
-		this.m_elements = new LinkedHashMap<String, Element>();
+		this.m_elements = new LinkedHashMap<String, IElement>();
 	}
 	
 	/**
@@ -58,14 +52,14 @@ public class Circuit implements Iterable<Element> {
 	 * @param p_id	l'ID de l'&eacute;l&eacute;ment &agrave r&eacute;cup&eacute;rer
 	 * @return	<code>Element</code> : l'&eacute;l&eacute;ment du circuit à la ligne <code>p_ligne</code> et colonne <code>p_colonne</code>
 	 */
-	public Element getElement(String p_id) {
+	public IElement getElement(String p_id) {
 		return (this.m_elements == null) ? null : this.m_elements.get(p_id);
 	}
 	
 	/**
 	 * @return	l'&eacute;l&eacute;ment de d&eacute;part du circuit
 	 */
-	public Element getElementDepart() {
+	public IElement getElementDepart() {
 		return (this.m_idElementDepart == null) ? 
 				null : this.m_elements.get(this.m_idElementDepart);
 	}
@@ -75,12 +69,17 @@ public class Circuit implements Iterable<Element> {
 	 * 
 	 * @param p_element	l'&eacute;l&eacute;ment &agrave; ajouter au circuit
 	 */
-	public void addElement(Element p_element) {
-		if(p_element instanceof RouteDepart) {
-			if(this.m_idElementDepart != null && !this.m_idElementDepart.equalsIgnoreCase(p_element.getId())) {
-				return;
+	public void addElement(IElement p_element) {
+		if(p_element instanceof IRoute) {
+			if(((IRoute)p_element).estDepart()) {
+				if(this.m_idElementDepart != null && !this.m_idElementDepart.equalsIgnoreCase(p_element.getId())) {
+					return;
+				}
+				this.m_idElementDepart = p_element.getId();
 			}
-			this.m_idElementDepart = p_element.getId();
+			else if(p_element.getId().equalsIgnoreCase(this.m_idElementDepart)) {
+				this.m_idElementDepart = null;
+			}
 		}
 		else if(p_element.getId().equalsIgnoreCase(this.m_idElementDepart)) {
 			this.m_idElementDepart = null;
@@ -91,7 +90,7 @@ public class Circuit implements Iterable<Element> {
 		List<String> ids = new LinkedList<String>(this.m_elements.keySet());
 		Collections.sort(ids);
 		
-		LinkedHashMap<String, Element> newElements = new LinkedHashMap<String, Element>(this.m_elements);
+		LinkedHashMap<String, IElement> newElements = new LinkedHashMap<String, IElement>(this.m_elements);
 		this.m_elements.clear();
 		for(String id : ids) {
 			this.m_elements.put(id, newElements.get(id));
@@ -114,8 +113,8 @@ public class Circuit implements Iterable<Element> {
 		}
 		
 		Point ouest,nord,est,sud;
-		for(Element elem : this) {
-			if(estElementRouteOuVirage(elem)) {
+		for(IElement elem : this) {
+			if(elem instanceof IRoute) {
 				ouest = Utils.getPointOuest(elem);
 				if(ouest != null) {
 					if(!this.testConnexion(elem,ouest))
@@ -147,14 +146,14 @@ public class Circuit implements Iterable<Element> {
 	 * @return	<code>true</code> si une connexion existe entre un &eacute;l&eacute;ment du circuit 
 	 * 			<code>!= p_elem</code> et le point <code>p_point</code>, <code>false</code> sinon
 	 */
-	private boolean testConnexion(Element p_elem, Point p_point) {
-		Iterator<Element> itElements = this.iterator();
+	private boolean testConnexion(IElement p_elem, Point p_point) {
+		Iterator<IElement> itElements = this.iterator();
 		Point[] pointsElem;
-		Element elem2;
+		IElement elem2;
 		while(itElements.hasNext()) {
 			elem2 = itElements.next();
 			
-			if(estElementRouteOuVirage(elem2) && (elem2 != p_elem)) {
+			if((elem2 instanceof IRoute) && (elem2 != p_elem)) {
 				pointsElem = new Point[]{Utils.getPointOuest(elem2),Utils.getPointNord(elem2),Utils.getPointEst(elem2),Utils.getPointSud(elem2)};
 				
 				if(this.estConnecte(p_point, pointsElem)) {
@@ -162,28 +161,6 @@ public class Circuit implements Iterable<Element> {
 				}
 			}
 		}
-		return false;
-	}
-	
-	/**
-	 * @param p_element
-	 * @return	<code>true</code> si l'&eacute;l&eacute;ment est une route ou un virage, <code>false</code> sinon
-	 */
-	private boolean estElementRouteOuVirage(Element p_element) {
-		if(p_element instanceof RouteDepart)
-			return true;
-		if(p_element instanceof RouteH)
-			return true;
-		if(p_element instanceof RouteV)
-			return true;
-		if(p_element instanceof VirageIG)
-			return true;
-		if(p_element instanceof VirageSG)
-			return true;
-		if(p_element instanceof VirageSD)
-			return true;
-		if(p_element instanceof VirageID)
-			return true;
 		return false;
 	}
 	
@@ -202,7 +179,7 @@ public class Circuit implements Iterable<Element> {
 	}
 	
 	@Override
-	public Iterator<Element> iterator() {
+	public Iterator<IElement> iterator() {
 		return this.m_elements.values().iterator();
 	}
 }
