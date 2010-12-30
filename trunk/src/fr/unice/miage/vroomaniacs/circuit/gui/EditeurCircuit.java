@@ -155,9 +155,24 @@ public class EditeurCircuit extends JFrame {
 		JMenu menuFichier = new JMenu("Fichier");
 		menuBar.add(menuFichier);
 		
+		JMenuItem itemCharger = new JMenuItem("Charger", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/charger.png")));
+		menuFichier.add(itemCharger);
+		itemCharger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,KeyEvent.CTRL_DOWN_MASK));
+		itemCharger.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showOpenDialog(EditeurCircuit.this);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					// TODO Michel : Deserialisation
+				}
+			}
+		});
+		
 		JMenuItem itemSauvegarder = new JMenuItem("Sauvegarder", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/disquette.png")));
 		menuFichier.add(itemSauvegarder);
-		itemSauvegarder.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S,KeyEvent.CTRL_DOWN_MASK));
+		itemSauvegarder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,KeyEvent.CTRL_DOWN_MASK));
 		itemSauvegarder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -166,7 +181,7 @@ public class EditeurCircuit extends JFrame {
 					int returnVal = fc.showSaveDialog(EditeurCircuit.this);
 					if(returnVal == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
-						System.out.println("Sauvegarde dans le fichier " + file.getName() + "...");
+						// TODO Michel : Serialisation
 					}
 				}
 				else {
