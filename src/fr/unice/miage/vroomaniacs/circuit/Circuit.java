@@ -1,6 +1,7 @@
 package fr.unice.miage.vroomaniacs.circuit;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -16,17 +17,29 @@ import fr.unice.miage.vroomaniacs.utils.Utils;
  * @author Julien Lespagnard
  * @version 1.0
  */
-public class Circuit implements Iterable<IElement> {
+public class Circuit implements Iterable<IElement>, Serializable {
+	
+	private static final long serialVersionUID = 8136469263560443879L;
 	/** Liste des &eacute;l&eacute;ments composant le circuit.<br />
 	 *  Les &eacute;l&eacute;ments sont rang&eacute;s par ligne puis par colonne.
 	 */
 	private Map<String, IElement> m_elements;
 	/** ID de l'&eacute;l&eacute;ment de d&eacute;part du cricuit. */
-	private String m_idElementDepart = null;
-	
+	private  String m_idElementDepart = null;
 	/**
 	 * Constructeur.
 	 */
+	public String toString()
+	{
+		String res = m_idElementDepart+"\n";
+		res+= m_elements.size()+" -- "+m_elements.get(m_idElementDepart).getId();
+		Iterator it = m_elements.keySet().iterator();
+		while(it.hasNext())
+		{
+			res+="element: "+m_elements.get(it.next()).getId()+"\n";
+		}
+		return res;
+	}
 	private Circuit() {
 		this.m_elements = new LinkedHashMap<String, IElement>();
 	}
@@ -34,7 +47,11 @@ public class Circuit implements Iterable<IElement> {
 	/**
 	 * Holder de la classe circuit charg&eacute; au preemier appel de celui-ci.
 	 */
-	private static class CircuitHolder {
+	private static class CircuitHolder implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5794628137997911061L;
 		private static final Circuit m_instance = new Circuit();
 	}
 	

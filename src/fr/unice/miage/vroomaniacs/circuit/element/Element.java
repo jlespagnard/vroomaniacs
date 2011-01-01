@@ -25,7 +25,7 @@ public abstract class Element extends JLabel implements IElement, Serializable, 
 	/** L'ID de l'&eacute;l&eacute;ment */
 	private String m_id;
 	/** L'&eacute;diteur de cricuit sur lequel se trouve l'&eacute;l&eacute;ment */
-	private EditeurCircuit m_editeur;
+	private transient EditeurCircuit m_editeur;
 	
 	/**
 	 * Constructeur.
