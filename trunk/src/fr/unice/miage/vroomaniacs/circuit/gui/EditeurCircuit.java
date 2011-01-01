@@ -36,6 +36,7 @@ import fr.unice.miage.vroomaniacs.circuit.builder.Builder;
 import fr.unice.miage.vroomaniacs.circuit.builder.BuilderHerbe;
 import fr.unice.miage.vroomaniacs.circuit.element.Element;
 import fr.unice.miage.vroomaniacs.circuit.element.IElement;
+import fr.unice.miage.vroomaniacs.persistance.Memento;
 
 @SuppressWarnings("serial")
 public class EditeurCircuit extends JFrame {
@@ -165,7 +166,10 @@ public class EditeurCircuit extends JFrame {
 				int returnVal = fc.showOpenDialog(EditeurCircuit.this);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					// TODO Michel : Deserialisation
+					//Michel : Deserialisation => DONE
+					//loadedTrack est l'objet charge
+					Circuit loadedTrack = (Circuit)Memento.objLoading(file);
+					//System.out.println(loadedTrack.toString());
 				}
 			}
 		});
@@ -181,7 +185,9 @@ public class EditeurCircuit extends JFrame {
 					int returnVal = fc.showSaveDialog(EditeurCircuit.this);
 					if(returnVal == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
-						// TODO Michel : Serialisation
+						// Michel : Serialisation => DONE
+						//System.out.println(Circuit.getInstance().toString());
+						Memento memento = new Memento(Circuit.getInstance(),file);
 					}
 				}
 				else {

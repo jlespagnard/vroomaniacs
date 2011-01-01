@@ -1,6 +1,8 @@
 package fr.unice.miage.vroomaniacs.circuit.element;
 
-public interface IElement {
+import java.io.Serializable;
+
+public interface IElement extends Serializable{
 	/**
 	 * @return	l'ID de l'&eacute;l&eacute;ment
 	 */
