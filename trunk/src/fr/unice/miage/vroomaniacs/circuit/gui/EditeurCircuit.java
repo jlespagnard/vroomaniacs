@@ -13,8 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +64,9 @@ public class EditeurCircuit extends JFrame {
 		this.construireMenuBar();
 		
 		JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		this.add(panelNorth, BorderLayout.NORTH);
+		JScrollPane scrollPaneNorth = new JScrollPane(panelNorth);
+		scrollPaneNorth.setPreferredSize(new Dimension(420,(int)(Element.DIM.getHeight()+20)));
+		this.add(scrollPaneNorth, BorderLayout.NORTH);
 		
 		JPanel panelCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		JScrollPane scrollPaneCenter = new JScrollPane(panelCenter);
@@ -96,11 +96,9 @@ public class EditeurCircuit extends JFrame {
 			String className = fileName.substring(0, fileName.length()-6);
 			className = "fr.unice.miage.vroomaniacs.circuit.builder." + className;
 			try {
-				System.out.println(className);
 				Class cl = Class.forName(className);
 				if((cl.getSuperclass() == Builder.class) && !cl.isInterface() && !Modifier.isAbstract(cl.getModifiers())) {
-					Constructor construct = cl.getConstructor(new Class[]{});
-					this.ajouterItemCircuit((Builder)construct.newInstance(new Object[]{}));
+					this.ajouterItemCircuit((Builder)cl.newInstance());
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -110,11 +108,7 @@ public class EditeurCircuit extends JFrame {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
 			} catch (SecurityException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			}
 		}
@@ -166,10 +160,12 @@ public class EditeurCircuit extends JFrame {
 				int returnVal = fc.showOpenDialog(EditeurCircuit.this);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					//Michel : Deserialisation => DONE
-					//loadedTrack est l'objet charge
 					Circuit loadedTrack = (Circuit)Memento.objLoading(file);
-					//System.out.println(loadedTrack.toString());
+					for(IElement elem : loadedTrack) {
+						elem.setEditeurCircuit(EditeurCircuit.this);
+						Circuit.getInstance().addElement(elem);
+					}
+					EditeurCircuit.this.paint(EditeurCircuit.this.getGraphics());
 				}
 			}
 		});
@@ -185,9 +181,7 @@ public class EditeurCircuit extends JFrame {
 					int returnVal = fc.showSaveDialog(EditeurCircuit.this);
 					if(returnVal == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
-						// Michel : Serialisation => DONE
-						//System.out.println(Circuit.getInstance().toString());
-						Memento memento = new Memento(Circuit.getInstance(),file);
+						new Memento(Circuit.getInstance(),file);
 					}
 				}
 				else {

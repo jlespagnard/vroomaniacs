@@ -18,8 +18,9 @@ import fr.unice.miage.vroomaniacs.circuit.gui.PointilleBorder;
  * @author Julien Lespagnard
  * @version	1.0
  */
-@SuppressWarnings("serial")
 public abstract class Element extends JLabel implements IElement, Serializable, MouseListener {
+	private static final long serialVersionUID = 1L;
+
 	public static final Dimension DIM = new Dimension(40,40);
 	
 	/** L'ID de l'&eacute;l&eacute;ment */
@@ -51,6 +52,11 @@ public abstract class Element extends JLabel implements IElement, Serializable, 
 	@Override
 	public String getId() {
 		return this.m_id;
+	}
+	
+	@Override
+	public void setEditeurCircuit(EditeurCircuit p_editeurCircuit) {
+		this.m_editeur = p_editeurCircuit;
 	}
 
 	@Override

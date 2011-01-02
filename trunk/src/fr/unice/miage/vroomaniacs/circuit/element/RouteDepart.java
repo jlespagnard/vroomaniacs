@@ -9,8 +9,9 @@ import fr.unice.miage.vroomaniacs.circuit.gui.EditeurCircuit;
  * @author Julien Lespagnard
  * @version	1.0
  */
-@SuppressWarnings("serial")
 public class RouteDepart extends Element implements IRoute, Serializable {
+	private static final long serialVersionUID = 3L;
+	
 	/**
 	 * Constructeur.
 	 * 
