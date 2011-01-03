@@ -1,10 +1,14 @@
 package fr.unice.miage.vroomaniacs.circuit.gui;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -165,6 +169,7 @@ public class EditeurCircuit extends JFrame {
 						elem.setEditeurCircuit(EditeurCircuit.this);
 						Circuit.getInstance().addElement(elem);
 					}
+					Circuit.getInstance().estValide();
 					EditeurCircuit.this.paint(EditeurCircuit.this.getGraphics());
 				}
 			}
@@ -284,6 +289,19 @@ public class EditeurCircuit extends JFrame {
 			for(IElement elem : Circuit.getInstance()) {
 				this.m_panelGrid.add((Element)elem);
 			}
+			
+			/* TODO : code a supprimer, c'est juste pour verifier le chemin */
+			Graphics2D panGridGraphic = (Graphics2D)this.m_panelGrid.getGraphics();
+			panGridGraphic.setColor(Color.MAGENTA);
+			panGridGraphic.setStroke(new BasicStroke(2));
+			Point pointPrecedent = null;
+			for(Point point : Circuit.getInstance().getChemin()) {
+				if(pointPrecedent != null) {
+					panGridGraphic.drawLine(pointPrecedent.x, pointPrecedent.y, point.x, point.y);
+				}
+				pointPrecedent = point;
+			}
+			/* Fin code a supprimer */
 		}
 		this.validate();
 	}

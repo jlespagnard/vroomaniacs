@@ -18,40 +18,29 @@ import fr.unice.miage.vroomaniacs.utils.Utils;
  * @version 1.0
  */
 public class Circuit implements Iterable<IElement>, Serializable {
+	private static final long serialVersionUID = 10L;
 	
-	private static final long serialVersionUID = 8136469263560443879L;
 	/** Liste des &eacute;l&eacute;ments composant le circuit.<br />
 	 *  Les &eacute;l&eacute;ments sont rang&eacute;s par ligne puis par colonne.
 	 */
 	private Map<String, IElement> m_elements;
 	/** ID de l'&eacute;l&eacute;ment de d&eacute;part du cricuit. */
 	private  String m_idElementDepart = null;
+	/**	Liste des points formant le chemin du circuit. */
+	private List<Point> m_chemin;
+	
 	/**
 	 * Constructeur.
 	 */
-	public String toString()
-	{
-		String res = m_idElementDepart+"\n";
-		res+= m_elements.size()+" -- "+m_elements.get(m_idElementDepart).getId();
-		Iterator it = m_elements.keySet().iterator();
-		while(it.hasNext())
-		{
-			res+="element: "+m_elements.get(it.next()).getId()+"\n";
-		}
-		return res;
-	}
 	private Circuit() {
 		this.m_elements = new LinkedHashMap<String, IElement>();
+		this.m_chemin = new LinkedList<Point>();
 	}
 	
 	/**
 	 * Holder de la classe circuit charg&eacute; au preemier appel de celui-ci.
 	 */
-	private static class CircuitHolder implements Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 5794628137997911061L;
+	private static class CircuitHolder {
 		private static final Circuit m_instance = new Circuit();
 	}
 	
@@ -67,10 +56,17 @@ public class Circuit implements Iterable<IElement>, Serializable {
 	 * &agrave; la ligne <code>p_ligne</code> et colonne <code>p_colonne</code>.
 	 * 
 	 * @param p_id	l'ID de l'&eacute;l&eacute;ment &agrave r&eacute;cup&eacute;rer
-	 * @return	<code>Element</code> : l'&eacute;l&eacute;ment du circuit à la ligne <code>p_ligne</code> et colonne <code>p_colonne</code>
+	 * @return	<code>IElement</code> : l'&eacute;l&eacute;ment du circuit à la ligne <code>p_ligne</code> et colonne <code>p_colonne</code>
 	 */
 	public IElement getElement(String p_id) {
-		return (this.m_elements == null) ? null : this.m_elements.get(p_id);
+		return this.m_elements.get(p_id);
+	}
+	
+	/**
+	 * @return	le chemin du circuit d&eacute;fini par la liste de points renvoy&eacute;s
+	 */
+	public List<Point> getChemin() {
+		return this.m_chemin;
 	}
 	
 	/**
@@ -114,11 +110,74 @@ public class Circuit implements Iterable<IElement>, Serializable {
 		}
 	}
 	
+	private void construireChemin() {
+		this.m_chemin = new LinkedList<Point>();
+		
+		IRoute elem = (IRoute)this.getElementDepart();
+		this.m_chemin.add(Utils.getPointCentre(elem));
+		
+		Point pointElem = Utils.getPointOuest(elem);
+		IRoute elemSuivant;
+		while((elemSuivant = testConnexion(elem, pointElem)) != null) {
+			elem = elemSuivant;
+			if(elem.getId().equals(this.m_idElementDepart)) {
+				break;
+			}
+			
+			this.m_chemin.add(Utils.getPointCentre(elem));
+			if(pointElem.equals(Utils.getPointEst(elem))) {
+				if(elem.aSud()) {
+					pointElem = Utils.getPointSud(elem);
+				}
+				else if(elem.aOuest()) {
+					pointElem = Utils.getPointOuest(elem);
+				}
+				else {
+					pointElem = Utils.getPointNord(elem);
+				}
+			}
+			else if(pointElem.equals(Utils.getPointSud(elem))) {
+				if(elem.aEst()) {
+					pointElem = Utils.getPointEst(elem);
+				}
+				else if(elem.aOuest()) {
+					pointElem = Utils.getPointOuest(elem);
+				}
+				else {
+					pointElem = Utils.getPointNord(elem);
+				}
+			}
+			else if(pointElem.equals(Utils.getPointOuest(elem))) {
+				if(elem.aSud()) {
+					pointElem = Utils.getPointSud(elem);
+				}
+				else if(elem.aEst()) {
+					pointElem = Utils.getPointEst(elem);
+				}
+				else {
+					pointElem = Utils.getPointNord(elem);
+				}
+			}
+			else if(pointElem.equals(Utils.getPointNord(elem))) {
+				if(elem.aSud()) {
+					pointElem = Utils.getPointSud(elem);
+				}
+				else if(elem.aOuest()) {
+					pointElem = Utils.getPointOuest(elem);
+				}
+				else {
+					pointElem = Utils.getPointEst(elem);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Nettoie la liste des &eacute;l&eacute;ments du cricuit.
 	 */
 	public void clearElements() {
 		this.m_elements.clear();
+		this.m_chemin.clear();
 	}
 	
 	/**
@@ -134,36 +193,40 @@ public class Circuit implements Iterable<IElement>, Serializable {
 			if(elem instanceof IRoute) {
 				ouest = Utils.getPointOuest(elem);
 				if(ouest != null) {
-					if(!this.testConnexion(elem,ouest))
+					if(this.testConnexion(elem,ouest) == null)
 						return false;
 				}
 				nord = Utils.getPointNord(elem);
 				if(nord != null) {
-					if(!this.testConnexion(elem,nord))
+					if(this.testConnexion(elem,nord) == null)
 						return false;
 				}
 				est = Utils.getPointEst(elem);
 				if(est != null) {
-					if(!this.testConnexion(elem,est))
+					if(this.testConnexion(elem,est) == null)
 						return false;
 				}
 				sud = Utils.getPointSud(elem);
 				if(sud != null) {
-					if(!this.testConnexion(elem,sud))
+					if(this.testConnexion(elem,sud) == null)
 						return false;
 				}
 			}
 		}
+		
+		this.construireChemin();
+		
 		return true;
 	}
 	
 	/**
-	 * @param p_elem
-	 * @param p_point
-	 * @return	<code>true</code> si une connexion existe entre un &eacute;l&eacute;ment du circuit 
-	 * 			<code>!= p_elem</code> et le point <code>p_point</code>, <code>false</code> sinon
+	 * @param p_elem	l'&eacute;l&eacute;ment devant &ecirc;tre connect&eacute;
+	 * @param p_point	le point devant &eacute;tablir la connexion de l'&eacute;l&eacute;ment 
+	 * 					<code>p_elem</code> avec un des autres &eacute;l&eacute;ments
+	 * @return	<code>IRoute</code> : l'&eacute;l&eacute;ment connect&eacute; avec <code>p_elem</code> 
+	 * 			par le point <code>p_point</code>
 	 */
-	private boolean testConnexion(IElement p_elem, Point p_point) {
+	private IRoute testConnexion(IElement p_elem, Point p_point) {
 		Iterator<IElement> itElements = this.iterator();
 		Point[] pointsElem;
 		IElement elem2;
@@ -174,11 +237,11 @@ public class Circuit implements Iterable<IElement>, Serializable {
 				pointsElem = new Point[]{Utils.getPointOuest(elem2),Utils.getPointNord(elem2),Utils.getPointEst(elem2),Utils.getPointSud(elem2)};
 				
 				if(this.estConnecte(p_point, pointsElem)) {
-					return true;
+					return (IRoute)elem2;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	/**
