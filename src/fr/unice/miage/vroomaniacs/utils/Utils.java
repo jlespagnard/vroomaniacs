@@ -13,7 +13,7 @@ public abstract class Utils {
 	 * @param p_element
 	 * @return	la position de l'&eacute;l&eacute;ment dans la grille
 	 */
-	private static Point getPosition(IElement p_element) {
+	public static Point getPosition(IElement p_element) {
 		int x = Integer.parseInt(p_element.getId().split("_")[0]);
 		int y = Integer.parseInt(p_element.getId().split("_")[1]);
 		
@@ -125,8 +125,8 @@ public abstract class Utils {
 			return null;
 		
 		Point position = getPosition(p_element);
-		double coorX = (position.getX()*Element.DIM.getWidth())+(Element.DIM.getWidth()/2);
-		double coorY = (position.getY()*Element.DIM.getHeight())+(Element.DIM.getHeight()/2);
+		double coorX = (position.getY()*Element.DIM.getWidth())+(Element.DIM.getWidth()/2);
+		double coorY = (position.getX()*Element.DIM.getHeight())+(Element.DIM.getHeight()/2);
 		
 		Point p = new Point();
 		p.setLocation(coorX, coorY);
