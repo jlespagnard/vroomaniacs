@@ -96,13 +96,4 @@ public class MenuEditeurCircuit extends JFrame {
 		this.dispose();
 		new EditeurCircuit(p_nbLignes, p_nbColonnes);
 	}
-	
-	public static void main(String[] args) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				new MenuEditeurCircuit();
-			}
-		}).start();
-	}
 }

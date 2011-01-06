@@ -73,8 +73,8 @@ public class NouvellePartie extends JFrame {
 		panelComportementJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		this.m_panelListeJoueurs.add(panelComportementJoueur);
 		panelComportementJoueur.add(new JLabel("Comportement : "));
-		final JComboBox cmbComportements = new JComboBox(new String[]{"Ivre","As du volant","Professionnel"});
-		panelComportementJoueur.add(cmbComportements);
+		final JComboBox comportements = new JComboBox(new String[]{"Ivre","As du volant","Professionnel"});
+		panelComportementJoueur.add(comportements);
 		
 		panelBoutonJoueur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		this.m_panelListeJoueurs.add(panelBoutonJoueur);			
@@ -94,7 +94,7 @@ public class NouvellePartie extends JFrame {
 					JOptionPane.showMessageDialog(NouvellePartie.this,message,"Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					Joueur joueur = new Joueur(txtNomNouveauJoueur.getText(), (String)cmbComportements.getSelectedItem());
+					Joueur joueur = new Joueur(txtNomNouveauJoueur.getText(),(String)comportements.getSelectedItem());
 					ajouterJoueur(joueur);
 				}
 			}

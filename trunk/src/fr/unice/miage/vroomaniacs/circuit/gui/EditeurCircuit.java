@@ -207,7 +207,7 @@ public class EditeurCircuit extends JFrame {
 		
 		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/quitter.png")));
 		menuFichier.add(itemQuitter);
-		itemQuitter.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_Q,KeyEvent.CTRL_DOWN_MASK));
+		itemQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,KeyEvent.CTRL_DOWN_MASK));
 		itemQuitter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
