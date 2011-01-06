@@ -7,7 +7,9 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -15,8 +17,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 
 import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
+import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame {
@@ -52,8 +56,9 @@ public class Vroomaniacs extends JFrame {
 		JMenu menuFichier = new JMenu("Fichier");
 		menu.add(menuFichier);
 		
-		JMenuItem itemNouvellePartie = new JMenuItem("Nouvelle partie");
+		JMenuItem itemNouvellePartie = new JMenuItem("Nouvelle partie", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/drapeau-damier.png")));
 		menuFichier.add(itemNouvellePartie);
+		itemNouvellePartie.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,KeyEvent.CTRL_DOWN_MASK));
 		itemNouvellePartie.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -63,12 +68,26 @@ public class Vroomaniacs extends JFrame {
 		
 		menuFichier.addSeparator();
 		
-		JMenuItem itemQuitter = new JMenuItem("Quitter");
+		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/quitter.png")));
+		itemQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,KeyEvent.CTRL_DOWN_MASK));
 		menuFichier.add(itemQuitter);
 		itemQuitter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
+			}
+		});
+		
+		JMenu menuOutils = new JMenu("Outils");
+		menu.add(menuOutils);
+		
+		JMenuItem itemEditerCircuit = new JMenuItem("Editer un circuit", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/editer.png")));
+		menuOutils.add(itemEditerCircuit);
+		itemEditerCircuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,KeyEvent.CTRL_DOWN_MASK));
+		itemEditerCircuit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new MenuEditeurCircuit();
 			}
 		});
 	}
