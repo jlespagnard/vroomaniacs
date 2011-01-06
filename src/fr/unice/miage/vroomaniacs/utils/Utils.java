@@ -1,13 +1,14 @@
 package fr.unice.miage.vroomaniacs.utils;
 
+import java.awt.Dimension;
 import java.awt.Point;
 
-import fr.unice.miage.vroomaniacs.circuit.Circuit;
-import fr.unice.miage.vroomaniacs.circuit.element.Element;
 import fr.unice.miage.vroomaniacs.circuit.element.IElement;
 import fr.unice.miage.vroomaniacs.circuit.element.IRoute;
 
 public abstract class Utils {
+	
+	public static final Dimension ELEM_DIM = new Dimension(40,40);
 	
 	/**
 	 * @param p_element
@@ -33,8 +34,8 @@ public abstract class Utils {
 				Point position = getPosition(p_element);
 				double coorX,coorY;
 			
-				coorX = position.getY()*Element.DIM.getWidth();
-				coorY = (position.getX()*Element.DIM.getHeight())+(Element.DIM.getHeight()/2);
+				coorX = position.getY()*Utils.ELEM_DIM.getWidth();
+				coorY = (position.getX()*Utils.ELEM_DIM.getHeight())+(Utils.ELEM_DIM.getHeight()/2);
 				
 				Point p = new Point();
 				p.setLocation(coorX, coorY);
@@ -57,8 +58,8 @@ public abstract class Utils {
 		
 		if(p_element instanceof IRoute) {
 			if(((IRoute)p_element).aNord()) {
-				coorX = (position.getY()*Element.DIM.getWidth())+(Element.DIM.getWidth()/2);
-				coorY = position.getX()*Element.DIM.getHeight();
+				coorX = (position.getY()*Utils.ELEM_DIM.getWidth())+(Utils.ELEM_DIM.getWidth()/2);
+				coorY = position.getX()*Utils.ELEM_DIM.getHeight();
 				
 				Point p = new Point();
 				p.setLocation(coorX, coorY);
@@ -81,8 +82,8 @@ public abstract class Utils {
 		
 		if(p_element instanceof IRoute) {
 			if(((IRoute)p_element).aEst()) {
-				coorX = (position.getY()*Element.DIM.getWidth())+Element.DIM.getWidth();
-				coorY = (position.getX()*Element.DIM.getHeight())+(Element.DIM.getHeight()/2);
+				coorX = (position.getY()*Utils.ELEM_DIM.getWidth())+Utils.ELEM_DIM.getWidth();
+				coorY = (position.getX()*Utils.ELEM_DIM.getHeight())+(Utils.ELEM_DIM.getHeight()/2);
 				
 				Point p = new Point();
 				p.setLocation(coorX, coorY);
@@ -105,8 +106,8 @@ public abstract class Utils {
 		
 		if(p_element instanceof IRoute) {
 			if(((IRoute)p_element).aSud()) {
-				coorX = (position.getY()*Element.DIM.getWidth())+(Element.DIM.getWidth()/2);
-				coorY = (position.getX()*Element.DIM.getHeight())+Element.DIM.getHeight();
+				coorX = (position.getY()*Utils.ELEM_DIM.getWidth())+(Utils.ELEM_DIM.getWidth()/2);
+				coorY = (position.getX()*Utils.ELEM_DIM.getHeight())+Utils.ELEM_DIM.getHeight();
 				
 				Point p = new Point();
 				p.setLocation(coorX, coorY);
@@ -125,8 +126,8 @@ public abstract class Utils {
 			return null;
 		
 		Point position = getPosition(p_element);
-		double coorX = (position.getY()*Element.DIM.getWidth())+(Element.DIM.getWidth()/2);
-		double coorY = (position.getX()*Element.DIM.getHeight())+(Element.DIM.getHeight()/2);
+		double coorX = (position.getY()*Utils.ELEM_DIM.getWidth())+(Utils.ELEM_DIM.getWidth()/2);
+		double coorY = (position.getX()*Utils.ELEM_DIM.getHeight())+(Utils.ELEM_DIM.getHeight()/2);
 		
 		Point p = new Point();
 		p.setLocation(coorX, coorY);
@@ -138,7 +139,6 @@ public abstract class Utils {
 	 * 			la taille de l'image des &eacute;l&eacute;ments
 	 */
 	public static double getLargeurRoute() {
-		IElement elem = Circuit.getInstance().iterator().next();
-		return ((Element)elem).getWidth()/2;
+		return (Utils.ELEM_DIM.getHeight()/2);
 	}
 }

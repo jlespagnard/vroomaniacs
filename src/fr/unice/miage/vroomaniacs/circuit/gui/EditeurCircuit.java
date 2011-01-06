@@ -39,6 +39,7 @@ import fr.unice.miage.vroomaniacs.circuit.builder.BuilderHerbe;
 import fr.unice.miage.vroomaniacs.circuit.element.Element;
 import fr.unice.miage.vroomaniacs.circuit.element.IElement;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
+import fr.unice.miage.vroomaniacs.utils.Utils;
 
 @SuppressWarnings("serial")
 public class EditeurCircuit extends JFrame {
@@ -69,7 +70,7 @@ public class EditeurCircuit extends JFrame {
 		
 		JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		JScrollPane scrollPaneNorth = new JScrollPane(panelNorth);
-		scrollPaneNorth.setPreferredSize(new Dimension(420,(int)(Element.DIM.getHeight()+20)));
+		scrollPaneNorth.setPreferredSize(new Dimension(420,(int)(Utils.ELEM_DIM.getHeight()+20)));
 		this.add(scrollPaneNorth, BorderLayout.NORTH);
 		
 		JPanel panelCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
