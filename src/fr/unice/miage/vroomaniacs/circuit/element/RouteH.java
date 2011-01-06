@@ -2,8 +2,9 @@ package fr.unice.miage.vroomaniacs.circuit.element;
 
 import java.io.Serializable;
 
+import javax.swing.JFrame;
+
 import fr.unice.miage.vroomaniacs.circuit.builder.Builder;
-import fr.unice.miage.vroomaniacs.circuit.gui.EditeurCircuit;
 
 /**
  * @author Julien Lespagnard
@@ -19,7 +20,7 @@ public class RouteH extends Element implements IRoute, Serializable {
 	 * @param p_builder	le builder utilis&eacute; pour construire l'&eacute;l&eacute;ment
 	 * @param p_id		l'ID de l'&eacute;l&eacute;ment
 	 */
-	public RouteH(EditeurCircuit p_editeur, Builder p_builder, String p_id) {
+	public RouteH(JFrame p_editeur, Builder p_builder, String p_id) {
 		super(p_editeur,p_builder,p_id);
 	}
 	

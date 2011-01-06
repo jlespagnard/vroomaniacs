@@ -125,7 +125,7 @@ public class NouvellePartie extends JFrame {
 		this.repaint();
 	}
 	
-	public NouvellePartie() {
+	public NouvellePartie(JFrame p_parent) {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
@@ -135,8 +135,14 @@ public class NouvellePartie extends JFrame {
 		JPanel panelBoutons = new JPanel(new FlowLayout(FlowLayout.RIGHT,5,5));
 		this.add(panelBoutons, BorderLayout.SOUTH);
 		
-		JButton btnCommencer = new JButton("Sélection du circuit");
-		panelBoutons.add(btnCommencer);
+		JButton btnSelectionCircuit = new JButton("Sélection du circuit");
+		panelBoutons.add(btnSelectionCircuit);
+		btnSelectionCircuit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		panelBoutons.add(btnAnnuler);
@@ -159,7 +165,7 @@ public class NouvellePartie extends JFrame {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				new NouvellePartie();
+				new NouvellePartie(null);
 			}
 		}).start();
 	}
