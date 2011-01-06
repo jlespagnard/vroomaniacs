@@ -3,6 +3,7 @@ package fr.unice.miage.vroomaniacs.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,14 +57,7 @@ public class Vroomaniacs extends JFrame {
 		itemNouvellePartie.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				synchronized (Vroomaniacs.this) {
-					new NouvellePartie(Vroomaniacs.this);
-					try {
-						Vroomaniacs.this.wait();
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-				}
+				new NouvellePartie(Vroomaniacs.this);
 			}
 		});
 		
@@ -79,12 +73,21 @@ public class Vroomaniacs extends JFrame {
 		});
 	}
 	
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+	}
+	
 	public void refreshCircuit() {
 		Vroomaniacs.this.remove(m_circuitPanel);
 		m_circuitPanel = new CircuitPanel();
 		Vroomaniacs.this.add(m_circuitPanel, BorderLayout.CENTER);
 		Vroomaniacs.this.validate();
 		Vroomaniacs.this.repaint();
+	}
+
+	public void debuterPartie() {
+		// TODO
 	}
 	
 	public static void main(String[] args) {
