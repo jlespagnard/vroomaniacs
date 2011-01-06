@@ -60,13 +60,15 @@ public abstract class Element extends JLabel implements IElement, Serializable, 
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {		
-		Builder builder = EditeurCircuit.getBuilder();
-		builder.creerElement(this.m_editeur, this.m_id);
-		
-		Circuit.getInstance().addElement(builder.getElement());
-		
-		this.m_editeur.repaint();
+	public void mousePressed(MouseEvent e) {
+		if(this.m_editeur != null) {
+			Builder builder = EditeurCircuit.getBuilder();
+			builder.creerElement(this.m_editeur, this.m_id);
+			
+			Circuit.getInstance().addElement(builder.getElement());
+			
+			this.m_editeur.repaint();
+		}
 	}
 
 	@Override

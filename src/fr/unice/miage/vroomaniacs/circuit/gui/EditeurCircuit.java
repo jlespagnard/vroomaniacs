@@ -62,7 +62,7 @@ public class EditeurCircuit extends JFrame {
 		this.m_nbColonnes = p_nbColonnes;
 		
 		this.setResizable(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 
 		this.construireMenuBar();
@@ -210,7 +210,7 @@ public class EditeurCircuit extends JFrame {
 		itemQuitter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				EditeurCircuit.this.dispose();
 			}
 		});
 		
@@ -223,7 +223,7 @@ public class EditeurCircuit extends JFrame {
 		itemChangerTailleGrille.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				EditeurCircuit.this.setVisible(false);
+				EditeurCircuit.this.dispose();
 				new MenuEditeurCircuit();
 			}
 		});
