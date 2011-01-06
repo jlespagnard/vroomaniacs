@@ -1,7 +1,8 @@
 package fr.unice.miage.vroomaniacs.circuit.builder;
 
+import javax.swing.JFrame;
+
 import fr.unice.miage.vroomaniacs.circuit.element.Herbe;
-import fr.unice.miage.vroomaniacs.circuit.gui.EditeurCircuit;
 
 /**
  * @author Julien Lespagnard
@@ -17,7 +18,7 @@ public class BuilderHerbe extends Builder {
 	}
 	
 	@Override
-	public void creerElement(EditeurCircuit p_editeur, String p_id) {
+	public void creerElement(JFrame p_editeur, String p_id) {
 		this.m_element = new Herbe(p_editeur,this,p_id);
 	}
 }
