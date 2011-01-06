@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fr.unice.miage.vroomaniacs.circuit.element.IElement;
-import fr.unice.miage.vroomaniacs.circuit.element.IRoute;
-import fr.unice.miage.vroomaniacs.utils.Utils;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IRoute;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 /**
  * @author Julien Lespagnard
