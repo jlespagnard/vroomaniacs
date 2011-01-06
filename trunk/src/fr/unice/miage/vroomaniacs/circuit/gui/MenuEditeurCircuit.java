@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 public class MenuEditeurCircuit extends JFrame {
 
 	public MenuEditeurCircuit() {
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLayout(new GridLayout(1,5));
 		
 		this.add(new JLabel("Lignes "));
@@ -42,7 +42,7 @@ public class MenuEditeurCircuit extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == btnErrorFrame) {
-					errorFrame.setVisible(false);
+					errorFrame.dispose();
 				}
 			}
 		});
@@ -93,7 +93,7 @@ public class MenuEditeurCircuit extends JFrame {
 	}
 
 	private void creerEditionCircuitUI(int p_nbLignes, int p_nbColonnes) {
-		this.setVisible(false);
+		this.dispose();
 		new EditeurCircuit(p_nbLignes, p_nbColonnes);
 	}
 	
