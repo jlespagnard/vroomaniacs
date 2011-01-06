@@ -7,18 +7,23 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import fr.unice.miage.vroomaniacs.circuit.Circuit;
+import fr.unice.miage.vroomaniacs.circuit.element.IElement;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
+import fr.unice.miage.vroomaniacs.persistance.Memento;
 
 @SuppressWarnings("serial")
 public class NouvellePartie extends JFrame {
@@ -125,7 +130,7 @@ public class NouvellePartie extends JFrame {
 		this.repaint();
 	}
 	
-	public NouvellePartie(JFrame p_parent) {
+	public NouvellePartie(final JFrame p_parent) {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
@@ -140,7 +145,19 @@ public class NouvellePartie extends JFrame {
 		btnSelectionCircuit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showOpenDialog(NouvellePartie.this);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					Circuit loadedTrack = (Circuit)Memento.objLoading(file);
+					for(IElement elem : loadedTrack) {
+						Circuit.getInstance().addElement(elem);
+					}
+					Circuit.getInstance().estValide();
+					synchronized (p_parent) {
+						p_parent.notify();
+					}
+				}
 			}
 		});
 		

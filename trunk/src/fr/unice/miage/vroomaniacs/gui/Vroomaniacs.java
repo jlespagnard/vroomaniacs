@@ -6,9 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -17,10 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
-import fr.unice.miage.vroomaniacs.circuit.element.IElement;
-import fr.unice.miage.vroomaniacs.persistance.Memento;
 
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame {
@@ -61,20 +56,13 @@ public class Vroomaniacs extends JFrame {
 		itemNouvellePartie.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(Vroomaniacs.this);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					Circuit loadedTrack = (Circuit)Memento.objLoading(file);
-					for(IElement elem : loadedTrack) {
-						Circuit.getInstance().addElement(elem);
+				synchronized (Vroomaniacs.this) {
+					new NouvellePartie(Vroomaniacs.this);
+					try {
+						Vroomaniacs.this.wait();
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
 					}
-					Circuit.getInstance().estValide();
-					Vroomaniacs.this.remove(m_circuitPanel);
-					m_circuitPanel = new CircuitPanel();
-					Vroomaniacs.this.add(m_circuitPanel, BorderLayout.CENTER);
-					Vroomaniacs.this.validate();
-					Vroomaniacs.this.repaint();
 				}
 			}
 		});
@@ -89,6 +77,14 @@ public class Vroomaniacs extends JFrame {
 				System.exit(0);
 			}
 		});
+	}
+	
+	public void refreshCircuit() {
+		Vroomaniacs.this.remove(m_circuitPanel);
+		m_circuitPanel = new CircuitPanel();
+		Vroomaniacs.this.add(m_circuitPanel, BorderLayout.CENTER);
+		Vroomaniacs.this.validate();
+		Vroomaniacs.this.repaint();
 	}
 	
 	public static void main(String[] args) {
