@@ -21,9 +21,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
-import fr.unice.miage.vroomaniacs.circuit.element.IElement;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 
 @SuppressWarnings("serial")
 public class NouvellePartie extends JFrame {

@@ -12,8 +12,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import fr.unice.miage.vroomaniacs.circuit.element.Element;
-import fr.unice.miage.vroomaniacs.circuit.element.IElement;
+import fr.unice.miage.vroomaniacs_plugins.builders.element.Element;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 
 @SuppressWarnings("serial")
 public class CircuitPanel extends JPanel {
@@ -25,7 +25,7 @@ public class CircuitPanel extends JPanel {
 		
 		List<IElement> elements = new LinkedList<IElement>();
 		for(IElement elem : Circuit.getInstance()) {
-			((Element)elem).setBorder(null);
+			elem.setBorderElement(null);
 			elements.add(elem);
 			mainPanel.add((Element)elem);
 		}
