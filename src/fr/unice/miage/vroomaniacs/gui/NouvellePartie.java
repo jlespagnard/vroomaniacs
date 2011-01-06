@@ -130,7 +130,7 @@ public class NouvellePartie extends JFrame {
 		this.repaint();
 	}
 	
-	public NouvellePartie(final JFrame p_parent) {
+	public NouvellePartie(final Vroomaniacs p_parent) {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
@@ -154,9 +154,25 @@ public class NouvellePartie extends JFrame {
 						Circuit.getInstance().addElement(elem);
 					}
 					Circuit.getInstance().estValide();
-					synchronized (p_parent) {
-						p_parent.notify();
-					}
+					p_parent.refreshCircuit();
+				}
+			}
+		});
+		
+		JButton btnCommencer = new JButton("Commencer");
+		panelBoutons.add(btnCommencer);
+		btnCommencer.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(m_joueurs.isEmpty()) {
+					JOptionPane.showMessageDialog(NouvellePartie.this,"J'ai jamais vu une course sans coureur.\nEn revanche un gars sans cerveau...","Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
+				}
+				else if(!Circuit.getInstance().estValide()) {
+					JOptionPane.showMessageDialog(NouvellePartie.this,"Sur quoi tu veux rouler ? Faut un circuit boulet !","Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					NouvellePartie.this.dispose();
+					p_parent.debuterPartie();
 				}
 			}
 		});
@@ -176,14 +192,5 @@ public class NouvellePartie extends JFrame {
 		this.setLocation((screenSize.width-this.getSize().width)/2,(screenSize.height-this.getSize().height)/2);
 		
 		this.setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				new NouvellePartie(null);
-			}
-		}).start();
 	}
 }
