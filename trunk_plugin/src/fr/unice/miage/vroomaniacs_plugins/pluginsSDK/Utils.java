@@ -9,7 +9,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnime;
 
 public abstract class Utils {
 	
-	public static final Dimension ELEM_DIM = new Dimension(40,40);
+public static final Dimension ELEM_DIM = new Dimension(40,40);
 	
 	/**
 	 * @param p_element

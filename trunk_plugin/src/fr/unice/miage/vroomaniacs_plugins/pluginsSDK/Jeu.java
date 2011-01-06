@@ -33,7 +33,6 @@ public class Jeu extends JPanel implements Runnable, MouseMotionListener, MouseL
     // voir méthode run()
     private final int TEMPS_ENTRE_IMAGES = 20;
 
-
     public Jeu() {
 
 
