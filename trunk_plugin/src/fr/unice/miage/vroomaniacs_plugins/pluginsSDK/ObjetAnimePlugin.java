@@ -18,6 +18,7 @@ public interface ObjetAnimePlugin extends Plugin {
 	public double getAccelerationAngulaire();
 	public String getNom();
 	public IVroomaniacs getJeu();
+	public void setJeu(IVroomaniacs p_jeu);
 	public void normaliseDirection();
 	public void ajouterComportement(ComportementPlugin p_comportement);
 	public void supprimerComportement(ComportementPlugin p_comportement);

@@ -22,11 +22,8 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     private IVroomaniacs m_leJeu;
     private ImageIcon m_image;
 
-    public ObjetAnime(IVroomaniacs p_jeu, String p_urlImage, String p_nom, double p_x, double p_y) {
-    	this.m_xPos = p_x;
-    	this.m_yPos = p_y;
+    public ObjetAnime(String p_nom,String p_urlImage) {
     	this.m_nom = p_nom;
-    	this.m_leJeu = p_jeu;
     	this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
     	this.m_boiteAnglobante = new Rectangle((int)this.m_xPos, (int)this.m_yPos, this.m_image.getIconWidth(), this.m_image.getIconHeight());
 	}
@@ -113,6 +110,11 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     @Override
 	public IVroomaniacs getJeu() {
     	return this.m_leJeu;
+    }
+    
+    @Override
+	public void setJeu(IVroomaniacs p_jeu) {
+    	this.m_leJeu = p_jeu;
     }
 
     @Override

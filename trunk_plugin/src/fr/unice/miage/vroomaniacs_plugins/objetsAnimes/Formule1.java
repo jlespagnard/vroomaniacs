@@ -1,10 +1,8 @@
 package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
-
 public class Formule1 extends ObjetAnime {
-	public Formule1(IVroomaniacs p_jeu, String p_nom, double p_x, double p_y) {
-		super(p_jeu, "imagesObjetsAnimes/formule1.png", p_nom, p_x, p_y);
+	public Formule1() {
+		super("imagesObjetsAnimes/formule1.png", "Formule 1");
 	}
 
 	@Override
