@@ -31,10 +31,10 @@ abstract public class ObjetAnime implements Dessinable, Deplacable {
     public Color color = Color.BLACK;
     // Une liste de comportements
     public ArrayList<ComportementPlugin> listeDesComportements = new ArrayList<ComportementPlugin>();
-    public Jeu leJeu;
+    public IVroomaniacs leJeu;
     // La mÃ©thode qui porte le nom de la classe s'appelle un constructeur, il sert Ã  crÃ©er un Cercle
 
-    public ObjetAnime(String nom, double x, double y, int largeur, int hauteur, Jeu leJeu) {
+    public ObjetAnime(String nom, double x, double y, int largeur, int hauteur, IVroomaniacs leJeu) {
         xPos = x;
         yPos = y;
         this.largeur = largeur;
