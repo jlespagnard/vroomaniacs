@@ -3,6 +3,7 @@ package fr.unice.miage.vroomaniacs.circuit;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -101,13 +102,29 @@ public class Circuit implements Iterable<IElement>, Serializable {
 		this.m_elements.put(p_element.getId(), p_element);
 		
 		List<String> ids = new LinkedList<String>(this.m_elements.keySet());
-		Collections.sort(ids);
+		Collections.sort(ids,new Comparator<String>() {
+			@Override
+			public int compare(String id1, String id2) {
+				int x1 = Integer.parseInt(id1.split("_")[0]);
+				int y1 = Integer.parseInt(id1.split("_")[1]);
+				int x2 = Integer.parseInt(id2.split("_")[0]);
+				int y2 = Integer.parseInt(id2.split("_")[1]);
+				
+				if(x1 != x2)
+					return (x1 > x2) ? 1 : -1;
+				if(y1 != y2)
+					return (y1 > y2) ? 1 : -1;
+				
+				return 0;
+			}
+		});
 		
 		LinkedHashMap<String, IElement> newElements = new LinkedHashMap<String, IElement>(this.m_elements);
 		this.m_elements.clear();
 		for(String id : ids) {
 			this.m_elements.put(id, newElements.get(id));
 		}
+		System.out.println(this.m_elements.keySet().toString());
 	}
 	
 	private void construireChemin() {
