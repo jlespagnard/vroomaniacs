@@ -28,20 +28,19 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 @SuppressWarnings("serial")
 public class NouvellePartie extends JFrame {
 	
-	private List<Joueur> m_joueurs = new LinkedList<Joueur>();
 	private JPanel m_panelListeJoueurs = null;
 	
 	public void construireListeJoueurs() {
 		if(this.m_panelListeJoueurs != null) {
 			this.remove(this.m_panelListeJoueurs);
 		}
-		this.m_panelListeJoueurs = new JPanel(new GridLayout(this.m_joueurs.size()+1, 1));
+		this.m_panelListeJoueurs = new JPanel(new GridLayout(Vroomaniacs.m_joueurs.size()+1, 1));
 		this.add(this.m_panelListeJoueurs, BorderLayout.CENTER);
 		
 		JPanel panelNomJoueur;
 		JPanel panelComportementJoueur;
 		JPanel panelBoutonJoueur;
-		for(final Joueur joueur : this.m_joueurs) {
+		for(final Joueur joueur : Vroomaniacs.m_joueurs) {
 			panelNomJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			this.m_panelListeJoueurs.add(panelNomJoueur);
 			panelNomJoueur.add(new JLabel("Nom : "));
@@ -94,15 +93,17 @@ public class NouvellePartie extends JFrame {
 					JOptionPane.showMessageDialog(NouvellePartie.this,message,"Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					Joueur joueur = new Joueur(txtNomNouveauJoueur.getText(),(String)comportements.getSelectedItem());
+					
+					Joueur joueur = new Joueur(Vroomaniacs.new_id, txtNomNouveauJoueur.getText(),(String)comportements.getSelectedItem());
 					ajouterJoueur(joueur);
+					Vroomaniacs.new_id++;
 				}
 			}
 		});
 	}
 	
 	public boolean joueurExistant(String p_nom) {
-		for(Joueur joueur : this.m_joueurs) {
+		for(Joueur joueur : Vroomaniacs.m_joueurs) {
 			if(joueur.getNom().equals(p_nom)) {
 				return true;
 			}
@@ -110,8 +111,9 @@ public class NouvellePartie extends JFrame {
 		return false;
 	}
 	
+	
 	public void ajouterJoueur(Joueur p_joueur) {
-		this.m_joueurs.add(p_joueur);
+		Vroomaniacs.m_joueurs.add(p_joueur);
 		this.construireListeJoueurs();
 		this.pack();
 		this.repaint();
@@ -119,12 +121,12 @@ public class NouvellePartie extends JFrame {
 	
 	public void supprimerJoueur(Joueur p_joueur) {
 		int index = -1;
-		for(Joueur joueur : this.m_joueurs) {
+		for(Joueur joueur : Vroomaniacs.m_joueurs) {
 			if(joueur.getNom().equals(p_joueur.getNom())) {
-				index = this.m_joueurs.indexOf(joueur);
+				index = Vroomaniacs.m_joueurs.indexOf(joueur);
 			}
 		}
-		this.m_joueurs.remove(index);
+		Vroomaniacs.m_joueurs.remove(index);
 		this.construireListeJoueurs();
 		this.pack();
 		this.repaint();
@@ -164,7 +166,7 @@ public class NouvellePartie extends JFrame {
 		btnCommencer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(m_joueurs.isEmpty()) {
+				if(Vroomaniacs.m_joueurs.isEmpty()) {
 					JOptionPane.showMessageDialog(NouvellePartie.this,"J'ai jamais vu une course sans coureur.\nEn revanche un gars sans cerveau...","Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
 				}
 				else if(!Circuit.getInstance().estValide()) {

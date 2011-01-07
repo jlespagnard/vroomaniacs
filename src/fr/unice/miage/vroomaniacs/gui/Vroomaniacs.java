@@ -8,6 +8,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -17,17 +19,22 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 
 import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
+import fr.unice.miage.vroomaniacs.partie.Joueur;
 
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame implements Runnable {
 	private final int TEMPS_ENTRE_IMAGES = 20;
 	
 	private CircuitPanel m_circuitPanel = new CircuitPanel();
-	
+	private JPanel m_panelScore;
+	private JTable m_tableScore;
+	public static List<Joueur> m_joueurs = new LinkedList<Joueur>();
+	public static int new_id=1;
 	public Vroomaniacs() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setUndecorated(true);
@@ -41,11 +48,21 @@ public class Vroomaniacs extends JFrame implements Runnable {
 		
 		this.add(this.m_circuitPanel, BorderLayout.CENTER);
 		
-		JPanel panelScore = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JScrollPane scrollPaneScore = new JScrollPane(panelScore);
+		int ligne = 0;
+		Object[][] donnees = new Object[this.m_joueurs.size()][2];
+		for (Joueur joueur:m_joueurs){
+			donnees[ligne] = new Object[]{joueur.getNom(),joueur.getComportement()};
+			ligne++;
+		}
+		String[] titreColonnes = { "joueur", "Comportement"}; 
+		
+		this.m_tableScore = new JTable(donnees, titreColonnes);
+		this.m_panelScore = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JScrollPane scrollPaneScore = new JScrollPane(this.m_panelScore);
 		scrollPaneScore.setPreferredSize(new Dimension((int)(this.getPreferredSize().width/4),this.getPreferredSize().height));
 		this.add(scrollPaneScore, BorderLayout.EAST);
-		panelScore.add(new JLabel("DONNÉES DIVERSES"));
+		this.m_panelScore.add(this.m_tableScore);
+		
 		
 		this.pack();
 		this.setVisible(true);
@@ -103,7 +120,21 @@ public class Vroomaniacs extends JFrame implements Runnable {
 	}
 
 	public void debuterPartie() {
-		// TODO
+		this.m_panelScore.remove(this.m_tableScore);
+		
+		int ligne = 0;
+		Object[][] donnees = new Object[this.m_joueurs.size()][2];
+		for (Joueur joueur:m_joueurs){
+			donnees[ligne] = new Object[]{joueur.getNom(),joueur.getComportement()};
+			ligne++;
+		}
+		String[] titreColonnes = { "joueur", "Comportement"}; 
+		
+		this.m_tableScore = new JTable(donnees, titreColonnes);
+		this.m_panelScore.add(this.m_tableScore);
+		this.m_panelScore.repaint();
+		this.validate();
+		this.repaint();
 	}
 	
 	@Override
