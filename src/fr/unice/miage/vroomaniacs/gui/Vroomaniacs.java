@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -26,7 +26,9 @@ import javax.swing.KeyStroke;
 import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
+import fr.unice.miage.vroomaniacs_plugins.comportements.ComportementAvance;
 import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
 
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
@@ -53,7 +55,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		int ligne = 0;
 		Object[][] donnees = new Object[this.m_joueurs.size()][2];
 		for (Joueur joueur:m_joueurs){
-			donnees[ligne] = new Object[]{joueur.getNom(),joueur.getComportement()};
+			donnees[ligne] = new Object[]{joueur.getNom(),joueur.getObjetAnime()};
 			ligne++;
 		}
 		String[] titreColonnes = { "joueur", "Comportement"}; 
@@ -126,8 +128,9 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		
 		int ligne = 0;
 		Object[][] donnees = new Object[this.m_joueurs.size()][2];
-		for (Joueur joueur:m_joueurs){
-			donnees[ligne] = new Object[]{joueur.getNom(),joueur.getComportement()};
+		for (Joueur joueur:m_joueurs) {
+			joueur.getObjetAnime().ajouterComportement(new ComportementAvance());
+			donnees[ligne] = new Object[]{joueur.getNom(),joueur.getObjetAnime().getName()};
 			ligne++;
 		}
 		String[] titreColonnes = { "joueur", "Comportement"}; 
@@ -135,6 +138,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		this.m_tableScore = new JTable(donnees, titreColonnes);
 		this.m_panelScore.add(this.m_tableScore);
 		this.m_panelScore.repaint();
+		
 		this.validate();
 		this.repaint();
 	}
@@ -183,7 +187,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	public List<Dessinable> getListeObjetDessinable() {
 		List<Dessinable> objetsADessiner = new ArrayList<Dessinable>();
 		for(Joueur j : m_joueurs){
-//			objetsADessiner.add(j.getObjetAnime());
+			objetsADessiner.add((Dessinable)j.getObjetAnime());
 		}
 		return objetsADessiner;
 	}
@@ -191,5 +195,16 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	public static void main(String[] args) {
 		new Thread(new Vroomaniacs()).start();
 	}
-	
+
+	@Override
+	public void ajouteObjet(Dessinable arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Point getStand() {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 }
