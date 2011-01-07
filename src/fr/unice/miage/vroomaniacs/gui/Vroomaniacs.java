@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,9 +26,10 @@ import javax.swing.KeyStroke;
 import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Dessinable;
 
 @SuppressWarnings("serial")
-public class Vroomaniacs extends JFrame implements Runnable {
+public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	private final int TEMPS_ENTRE_IMAGES = 20;
 	
 	private CircuitPanel m_circuitPanel = new CircuitPanel();
@@ -169,8 +171,18 @@ public class Vroomaniacs extends JFrame implements Runnable {
             tempsPrecedent = System.currentTimeMillis();
         }
 	}
+
+	@Override
+	public List<Dessinable> getListeObjetDessinable() {
+		List<Dessinable> objetsADessiner = new ArrayList<Dessinable>();
+		for(Joueur j : m_joueurs){
+			objetsADessiner.add(j.getObjetAnime());
+		}
+		return objetsADessiner;
+	}
 	
 	public static void main(String[] args) {
 		new Thread(new Vroomaniacs()).start();
 	}
+	
 }
