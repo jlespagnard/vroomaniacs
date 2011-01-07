@@ -10,7 +10,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 /**
  * @author Anthony
  * Le comportement suit le chemin normal du circuit.
- */public class ComportementSuitChemin implements ComportementPlugin{
+ */public class ComportementSuitChemin extends ComportementAvance{
 
 	    public List<Point> chemin = null;
 	    public int indicePointCourant = 0;
@@ -36,6 +36,12 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	        double dx = p.x - o.xPos;
 	        double dy = p.y - o.yPos;
 	        o.direction = Math.atan2(dy, dx);
+	        o.direction = o.direction + o.accelerationAngulaire;
+	        o.xPos += o.vitesse * Math.cos(o.direction);
+	        o.yPos += o.vitesse * Math.sin(o.direction);
+	       
+	        // On garde la direction entre 0 et 2*PI
+	        o.normaliseDirection();
 	        o.normaliseDirection();
 	    }
 
