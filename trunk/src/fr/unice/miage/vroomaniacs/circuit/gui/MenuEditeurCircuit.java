@@ -1,6 +1,5 @@
 package fr.unice.miage.vroomaniacs.circuit.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -10,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
@@ -32,21 +32,6 @@ public class MenuEditeurCircuit extends JFrame {
 		final JButton btnOk = new JButton("OK");
 		this.add(btnOk);
 		
-		final JFrame errorFrame = new JFrame("Erreur");
-		final JLabel lblError = new JLabel();
-		errorFrame.add(lblError, BorderLayout.CENTER);
-		final JButton btnErrorFrame = new JButton("OK");
-		errorFrame.add(btnErrorFrame, BorderLayout.EAST);
-		errorFrame.setDefaultCloseOperation(HIDE_ON_CLOSE);
-		btnErrorFrame.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(e.getSource() == btnErrorFrame) {
-					errorFrame.dispose();
-				}
-			}
-		});
-			
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -60,9 +45,7 @@ public class MenuEditeurCircuit extends JFrame {
 						}
 					}
 					catch(NumberFormatException ex) {
-						lblError.setText("Vous devez saisir un nombre entier positif pour le nombre de lignes.");
-						errorFrame.pack();
-						errorFrame.setVisible(true);
+						JOptionPane.showMessageDialog(MenuEditeurCircuit.this,"Vous devez saisir un nombre entier positif pour le nombre de lignes.","Erreur de saisie",JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					
@@ -73,9 +56,7 @@ public class MenuEditeurCircuit extends JFrame {
 						}
 					}
 					catch(NumberFormatException ex) {
-						lblError.setText("Vous devez saisir un nombre entier positif pour le nombre de colonnes.");
-						errorFrame.pack();
-						errorFrame.setVisible(true);
+						JOptionPane.showMessageDialog(MenuEditeurCircuit.this,"Vous devez saisir un nombre entier positif pour le nombre de colonnes.","Erreur de saisie",JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					
