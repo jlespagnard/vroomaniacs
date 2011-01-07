@@ -1,6 +1,7 @@
 package fr.unice.miage.vroomaniacs.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -23,7 +24,9 @@ import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 
 @SuppressWarnings("serial")
-public class Vroomaniacs extends JFrame {
+public class Vroomaniacs extends JFrame implements Runnable {
+	private final int TEMPS_ENTRE_IMAGES = 20;
+	
 	private CircuitPanel m_circuitPanel = new CircuitPanel();
 	
 	public Vroomaniacs() {
@@ -92,11 +95,6 @@ public class Vroomaniacs extends JFrame {
 		});
 	}
 	
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-	}
-	
 	public void refreshCircuit() {
 		Vroomaniacs.this.remove(m_circuitPanel);
 		m_circuitPanel = new CircuitPanel();
@@ -109,12 +107,40 @@ public class Vroomaniacs extends JFrame {
 		// TODO
 	}
 	
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		Graphics g2 = this.m_circuitPanel.getGraphics();
+		// Il faut dessiner les voitures sur le circuit avec g2
+		// car le circuit est dans le panel m_circuitPanel
+		this.validate();
+	}
+	
+	@Override
+	public void run() {
+		long tempsPrecedent, tempsPrisPourImagePrecedente, tempsAttente;
+
+        tempsPrecedent = System.currentTimeMillis();
+
+        while (true) {
+            repaint();
+
+            tempsPrisPourImagePrecedente = System.currentTimeMillis() - tempsPrecedent;
+            tempsAttente = TEMPS_ENTRE_IMAGES - tempsPrisPourImagePrecedente;
+
+            if(tempsAttente < 0) {
+                tempsAttente = 2;
+            }
+            try {
+                Thread.sleep(tempsAttente);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            tempsPrecedent = System.currentTimeMillis();
+        }
+	}
+	
 	public static void main(String[] args) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				new Vroomaniacs();
-			}
-		}).start();
+		new Thread(new Vroomaniacs()).start();
 	}
 }
