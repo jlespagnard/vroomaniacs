@@ -2,7 +2,7 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Formule1 extends ObjetAnime {
 	public Formule1() {
-		super("imagesObjetsAnimes/formule1.png", "Formule 1");
+		super("Formule 1","imagesObjetsAnimes/formule1.png");
 	}
 
 	@Override
