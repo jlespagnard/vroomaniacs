@@ -1,7 +1,7 @@
 package fr.unice.miage.vroomaniacs_plugins.comportements;
 
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnime;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 
 public class ComportementAvance implements ComportementPlugin
 {
@@ -37,14 +37,14 @@ public class ComportementAvance implements ComportementPlugin
 	}
 
 	@Override
-	public void deplace(ObjetAnime o) {
+	public void deplace(ObjetAnimePlugin o) {
 		 // le comportement de base, fait avancer l'objet dans sa direction,
         // en fonction de sa vitesse linéaire. Il fait aussi varier sa vitesse linéaire
         // et angulaire en fonction des accélérations linéaires et angulaires
-        o.xPos += o.vitesse * Math.cos(o.direction);
-        o.yPos += o.vitesse * Math.sin(o.direction);
+        o.setXPos(o.getXPos()+(o.getVitesse()*Math.cos(o.getDirection())));
+        o.setYPos(o.getYPos()+(o.getVitesse()*Math.sin(o.getDirection())));
         //o.vitesse = o.vitesse + o.accelerationLineaire;
-        o.direction = o.direction + o.accelerationAngulaire;
+        o.setDirection(o.getDirection()+o.getAccelerationAngulaire());
         // On garde la direction entre 0 et 2*PI
         o.normaliseDirection();
 	}

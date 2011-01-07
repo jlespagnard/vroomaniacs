@@ -5,7 +5,6 @@ import java.awt.Point;
 
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IRoute;
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnime;
 
 public abstract class Utils {
 	
@@ -158,7 +157,7 @@ public static final Dimension ELEM_DIM = new Dimension(40,40);
      * @param d2
      * @return
      */
-    public static boolean collision(ObjetAnime d1, ObjetAnime d2) {
+    public static boolean collision(ObjetAnimePlugin d1, ObjetAnimePlugin d2) {
         // PREMIERE METHODE LENTE A CAUSE d'un NEW !
         // Mais intéressante car on utilisait la méthode toute faite
         // intersect() de la classe Rectangle de AWT
@@ -173,8 +172,8 @@ public static final Dimension ELEM_DIM = new Dimension(40,40);
 
 
         // SECONDE METHODE PLUS RAPIDE : on fait tout à la main ! Et pas de NEW
-        return RectsOverlap((int) d1.xPos, (int) d1.yPos, d1.largeur, d1.hauteur,
-                (int) d2.xPos, (int) d2.yPos, d2.largeur, d2.hauteur);
+        return RectsOverlap((int)d1.getXPos(), (int)d1.getYPos(), d1.getLargeur(), d1.getHauteur(),
+                (int)d2.getYPos(), (int)d2.getYPos(), d2.getLargeur(), d2.getHauteur());
     }
 
     /**

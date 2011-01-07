@@ -3,8 +3,7 @@ package fr.unice.miage.vroomaniacs_plugins.comportements;
 import java.awt.Point;
 import java.util.List;
 
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnime;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 /**
@@ -21,24 +20,24 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	        this.chemin = chemin;
 	    }
 
-	    public void deplace(ObjetAnime o) {
+	    public void deplace(ObjetAnimePlugin o) {
 	        // On recupere les coordonnees du prochain point de passage
 	        Point p = chemin.get(indicePointCourant);
 
 	        // Si on est trop pres du point courant, on passe au point suivant
-	        if (Utils.distance(o.xPos, o.yPos, p.x, p.y) < distanceValidationPassage) {
+	        if (Utils.distance(o.getXPos(), o.getYPos(), p.x, p.y) < distanceValidationPassage) {
 	            // On passe au point suivant
 	            indicePointCourant++;
 	            indicePointCourant %= chemin.size();
 	        }
 
 	        // Nouvelle direction a suivre
-	        double dx = p.x - o.xPos;
-	        double dy = p.y - o.yPos;
-	        o.direction = Math.atan2(dy, dx);
-	        o.direction = o.direction + o.accelerationAngulaire;
-	        o.xPos += o.vitesse * Math.cos(o.direction);
-	        o.yPos += o.vitesse * Math.sin(o.direction);
+	        double dx = p.x - o.getXPos();
+	        double dy = p.y - o.getYPos();
+	        o.setDirection(Math.atan2(dy, dx));
+	        o.setDirection(o.getDirection()+o.getAccelerationAngulaire());
+	        o.setXPos(o.getXPos()+(o.getVitesse()*Math.cos(o.getDirection())));
+	        o.setYPos(o.getYPos()+(o.getVitesse()*Math.sin(o.getDirection())));
 	       
 	        // On garde la direction entre 0 et 2*PI
 	        o.normaliseDirection();

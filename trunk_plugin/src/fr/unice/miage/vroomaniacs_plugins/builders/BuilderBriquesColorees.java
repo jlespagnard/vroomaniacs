@@ -3,18 +3,13 @@ package fr.unice.miage.vroomaniacs_plugins.builders;
 import fr.unice.miage.vroomaniacs_plugins.builders.element.Herbe;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IEditeurCircuit;
 
-/**
- * @author Julien Lespagnard
- * @version	1.0
- */
-public class BuilderHerbe extends Builder {
+public class BuilderBriquesColorees extends Builder {
+	
 	/**
-	 * Constructeur.
-	 * 
-	 * @param p_urlImage	l'URL de l'image repr&eacute;sentant l'&eacute;l&eacute;ment &agrave; construire
+	 * Constructeur
 	 */
-	public BuilderHerbe() {
-		super("imagesElements/pelouse.png");
+	public BuilderBriquesColorees() {
+		super("imagesElements/briques-colorees.png");
 	}
 	
 	@Override
@@ -24,17 +19,17 @@ public class BuilderHerbe extends Builder {
 
 	@Override
 	public String getDescription() {
-		return "Un élément de décor neutre.";
+		return "Un élément de décor briques colorées.";
 	}
 
 	@Override
 	public String getName() {
-		return "Sol pelouse";
+		return "Briques colorées";
 	}
 
 	@Override
 	public Class getType() {
-		return BuilderHerbe.class;
+		return BuilderBriquesColorees.class;
 	}
 
 	@Override

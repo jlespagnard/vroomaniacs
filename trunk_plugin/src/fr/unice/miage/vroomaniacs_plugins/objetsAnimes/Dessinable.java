@@ -1,4 +1,4 @@
-package fr.unice.miage.vroomaniacs_plugins.pluginsSDK;
+package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 import java.awt.Graphics;
 

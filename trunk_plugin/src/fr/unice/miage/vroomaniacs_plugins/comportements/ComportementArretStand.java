@@ -3,8 +3,7 @@ package fr.unice.miage.vroomaniacs_plugins.comportements;
 import java.awt.Point;
 import java.util.List;
 
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnime;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 public class ComportementArretStand extends ComportementSuitChemin
@@ -50,12 +49,12 @@ public class ComportementArretStand extends ComportementSuitChemin
 	}
 
 	@Override
-	public void deplace(ObjetAnime o) {
-		Point stand = o.leJeu.getStand();
-		if(!o.leJeu.getStand().equals(null) && (Utils.distance(o.xPos, o.yPos, stand.x,stand.y)<Utils.getLargeurRoute()*2))
+	public void deplace(ObjetAnimePlugin o) {
+		Point stand = o.getJeu().getStand();
+		if(!o.getJeu().getStand().equals(null) && (Utils.distance(o.getXPos(), o.getYPos(), stand.x,stand.y)<Utils.getLargeurRoute()*2))
 		{
-				o.direction = Math.atan2(stand.y, stand.x);
-				if((o.xPos == stand.x) && (o.yPos == stand.y))
+				o.setDirection(Math.atan2(stand.y, stand.x));
+				if((o.getXPos() == stand.x) && (o.getYPos() == stand.y))
 				{
 					long time = System.currentTimeMillis();
 					tempStand += time-tempPrec;
@@ -73,19 +72,17 @@ public class ComportementArretStand extends ComportementSuitChemin
 	        Point p = chemin.get(indicePointCourant);
 	
 	        // Si on est trop pres du point courant, on passe au point suivant
-	        if (Utils.distance(o.xPos, o.yPos, p.x, p.y) < distanceValidationPassage) {
+	        if (Utils.distance(o.getXPos(), o.getYPos(), p.x, p.y) < distanceValidationPassage) {
 	            // On passe au point suivant
 	            indicePointCourant++;
 	            indicePointCourant %= chemin.size();
 	        }
 	
 	        // Nouvelle direction a suivre
-	        double dx = p.x - o.xPos;
-	        double dy = p.y - o.yPos;
-	        o.direction = Math.atan2(dy, dx);
+	        double dx = p.x - o.getXPos();
+	        double dy = p.y - o.getYPos();
+	        o.setDirection(Math.atan2(dy, dx));
 	        o.normaliseDirection();
 		}
-		
 	}
-	
 }

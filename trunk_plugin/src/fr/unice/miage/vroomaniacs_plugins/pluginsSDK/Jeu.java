@@ -14,6 +14,9 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
+import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Deplacable;
+import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
+
 /**
  * Classe pruncipale qui définit le JEU lui-meme. Ici on va conserver des variables
  * publiques qui seront accessibles par les objets, etc. Parmis les variables :

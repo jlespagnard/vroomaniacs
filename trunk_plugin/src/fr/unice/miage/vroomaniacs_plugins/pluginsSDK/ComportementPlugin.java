@@ -7,5 +7,5 @@ import fr.unice.plugin.Plugin;
  * @author Anthony
  */
 public interface ComportementPlugin extends Plugin {
-    public void deplace(ObjetAnime o);
+    public void deplace(ObjetAnimePlugin o);
 }
