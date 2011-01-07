@@ -17,13 +17,11 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     private double m_vitesse = 5 * Math.random() + 3;
     private double m_acceleration = 0;
     private double m_accelerationAngulaire = 0;
-    private String m_nom;
     private ArrayList<ComportementPlugin> m_listeDesComportements = new ArrayList<ComportementPlugin>();
     private IVroomaniacs m_leJeu;
     private ImageIcon m_image;
 
-    public ObjetAnime(String p_nom,String p_urlImage) {
-    	this.m_nom = p_nom;
+    public ObjetAnime(String p_urlImage) {
     	this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
     	this.m_boiteAnglobante = new Rectangle((int)this.m_xPos, (int)this.m_yPos, this.m_image.getIconWidth(), this.m_image.getIconHeight());
 	}
@@ -100,11 +98,6 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     @Override
 	public double getAccelerationAngulaire() {
     	return this.m_accelerationAngulaire;
-    }
-    
-    @Override
-    public String getNom() {
-    	return this.m_nom;
     }
     
     @Override
