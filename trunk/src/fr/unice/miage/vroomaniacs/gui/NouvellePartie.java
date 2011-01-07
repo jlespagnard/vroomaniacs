@@ -8,8 +8,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,7 +23,13 @@ import javax.swing.JTextField;
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
+import fr.unice.miage.vroomaniacs_plugins.comportements.ComportementAvance;
+import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Formule1;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
+import fr.unice.plugin.Plugin;
+import fr.unice.plugin.PluginManager;
 
 @SuppressWarnings("serial")
 public class NouvellePartie extends JFrame {
@@ -38,7 +44,7 @@ public class NouvellePartie extends JFrame {
 		this.add(this.m_panelListeJoueurs, BorderLayout.CENTER);
 		
 		JPanel panelNomJoueur;
-		JPanel panelComportementJoueur;
+		JPanel panelObjetAnimeJoueur;
 		JPanel panelBoutonJoueur;
 		for(final Joueur joueur : Vroomaniacs.m_joueurs) {
 			panelNomJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -46,10 +52,10 @@ public class NouvellePartie extends JFrame {
 			panelNomJoueur.add(new JLabel("Nom : "));
 			panelNomJoueur.add(new JLabel(joueur.getNom()));
 			
-			panelComportementJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			this.m_panelListeJoueurs.add(panelComportementJoueur);
-			panelComportementJoueur.add(new JLabel("Comportement : "));
-			panelComportementJoueur.add(new JLabel(joueur.getComportement()));
+			panelObjetAnimeJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			this.m_panelListeJoueurs.add(panelObjetAnimeJoueur);
+			panelObjetAnimeJoueur.add(new JLabel("Véhicule : "));
+			panelObjetAnimeJoueur.add(new JLabel(joueur.getObjetAnime().getName()));
 			
 			panelBoutonJoueur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			this.m_panelListeJoueurs.add(panelBoutonJoueur);			
@@ -69,11 +75,21 @@ public class NouvellePartie extends JFrame {
 		panelNomJoueur.add(new JLabel("Nom : "));
 		panelNomJoueur.add(txtNomNouveauJoueur);
 		
-		panelComportementJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		this.m_panelListeJoueurs.add(panelComportementJoueur);
-		panelComportementJoueur.add(new JLabel("Comportement : "));
-		final JComboBox comportements = new JComboBox(new String[]{"Ivre","As du volant","Professionnel"});
-		panelComportementJoueur.add(comportements);
+		PluginManager manager = PluginManager.getPluginManager();
+		try {
+			manager.addJarURLsInDirectories(new URL[]{new URL("file:plugins")});
+		} catch (MalformedURLException e2) {
+			e2.printStackTrace();
+		}
+		
+		panelObjetAnimeJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		this.m_panelListeJoueurs.add(panelObjetAnimeJoueur);
+		panelObjetAnimeJoueur.add(new JLabel("Véhicule : "));
+		
+		manager.loadPlugins(ObjetAnimePlugin.class);
+		ObjetAnimePlugin[] pluginsObjetAnime = (ObjetAnimePlugin[])manager.getPluginInstances(ObjetAnimePlugin.class);
+		final JComboBox cmbObjetsAnimes = new JComboBox(pluginsObjetAnime);
+		panelObjetAnimeJoueur.add(cmbObjetsAnimes);
 		
 		panelBoutonJoueur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		this.m_panelListeJoueurs.add(panelBoutonJoueur);			
@@ -94,7 +110,15 @@ public class NouvellePartie extends JFrame {
 				}
 				else {
 					
-					Joueur joueur = new Joueur(Vroomaniacs.new_id, txtNomNouveauJoueur.getText(),(String)comportements.getSelectedItem());
+					Joueur joueur = null;
+					try {
+						ObjetAnimePlugin objetAnimeJoueur = ((ObjetAnimePlugin)cmbObjetsAnimes.getSelectedItem()).getClass().newInstance();
+						joueur = new Joueur(Vroomaniacs.new_id, txtNomNouveauJoueur.getText(),objetAnimeJoueur);
+					} catch (InstantiationException e1) {
+						e1.printStackTrace();
+					} catch (IllegalAccessException e1) {
+						e1.printStackTrace();
+					}
 					ajouterJoueur(joueur);
 					Vroomaniacs.new_id++;
 				}
