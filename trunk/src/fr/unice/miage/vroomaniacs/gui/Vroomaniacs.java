@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -23,10 +24,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 
+import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs_plugins.comportements.ComportementAvance;
+import fr.unice.miage.vroomaniacs_plugins.comportements.ComportementSuitChemin;
+import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Deplacable;
 import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
 
@@ -39,6 +43,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	private JTable m_tableScore;
 	public static List<Joueur> m_joueurs = new LinkedList<Joueur>();
 	public static int new_id=1;
+	
 	public Vroomaniacs() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setUndecorated(true);
@@ -129,7 +134,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		int ligne = 0;
 		Object[][] donnees = new Object[this.m_joueurs.size()][2];
 		for (Joueur joueur:m_joueurs) {
-			joueur.getObjetAnime().ajouterComportement(new ComportementAvance());
+			joueur.getObjetAnime().ajouterComportement(new ComportementSuitChemin(Circuit.getInstance().getChemin()));
 			donnees[ligne] = new Object[]{joueur.getNom(),joueur.getObjetAnime().getName()};
 			ligne++;
 		}
@@ -149,13 +154,13 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		Graphics g2 = this.m_circuitPanel.getGraphics();
 		// Il faut dessiner les voitures sur le circuit avec g2
 		// car le circuit est dans le panel m_circuitPanel
-//		for(Dessinable o : getListeObjetDessinable()){
-//			o.dessineToi(g2);
-//			if(o instanceof Deplacable){
-//				Deplacable od = (Deplacable)o;
-//				od.deplaceToi();
-//			}
-//		}
+		for(Dessinable o : getListeObjetDessinable()){
+			o.dessineToi(g2);
+			if(o instanceof Deplacable){
+				Deplacable od = (Deplacable)o;
+				od.deplaceToi();
+			}
+		}
 		this.validate();
 	}
 	
@@ -199,7 +204,6 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	@Override
 	public void ajouteObjet(Dessinable arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
