@@ -1,6 +1,10 @@
 package fr.unice.miage.vroomaniacs.partie;
 
+import java.awt.Point;
+
+import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 public class Joueur {
 	private int id_joueur;
@@ -11,6 +15,9 @@ public class Joueur {
 		this.id_joueur=p_id;
 		this.m_nom = p_nom;
 		this.m_objetAnime = p_objetAnime;
+		Point p = Utils.getPointCentre(Circuit.getInstance().getElementDepart());
+		this.m_objetAnime.setXPos(p.getX());
+		this.m_objetAnime.setYPos(p.getY());
 	}
 	
 	public int getId() {

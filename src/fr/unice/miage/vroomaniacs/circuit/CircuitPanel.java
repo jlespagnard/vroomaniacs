@@ -18,7 +18,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 @SuppressWarnings("serial")
 public class CircuitPanel extends JPanel {
 	public CircuitPanel() {
-		this.setLayout(new FlowLayout(FlowLayout.CENTER));
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
 		JPanel mainPanel = new JPanel();
 		this.add(mainPanel);
