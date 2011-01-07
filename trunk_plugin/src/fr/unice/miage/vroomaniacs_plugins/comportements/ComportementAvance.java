@@ -6,6 +6,9 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 public class ComportementAvance implements ComportementPlugin
 {
 
+	public ComportementAvance(){
+	}
+	
 	@Override
 	public boolean canProcess(Object arg0) {
 		return true;
@@ -18,7 +21,7 @@ public class ComportementAvance implements ComportementPlugin
 
 	@Override
 	public String getName() {
-		return "ComportementAvance";
+		return "ComportementAvancedsjdsfijsd";
 	}
 
 	@Override

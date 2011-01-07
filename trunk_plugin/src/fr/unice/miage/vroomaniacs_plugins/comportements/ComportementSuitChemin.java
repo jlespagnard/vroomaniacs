@@ -3,20 +3,25 @@ package fr.unice.miage.vroomaniacs_plugins.comportements;
 import java.awt.Point;
 import java.util.List;
 
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 /**
  * @author Anthony
  * Le comportement suit le chemin normal du circuit.
- */public class ComportementSuitChemin extends ComportementAvance{
+ */public class ComportementSuitChemin extends ComportementAvance implements ComportementPlugin{
 
 	    public List<Point> chemin = null;
 	    public int indicePointCourant = 0;
 	    // On considere qu'un objet est passé au point de passage si la distance
 	    // de l'objet a  ce point est < une valeur donnee
 	    public int distanceValidationPassage = 10;
+	    public ComportementSuitChemin(){
+	    	super();
+	    }
 	    public ComportementSuitChemin(List<Point> chemin) {
+	    	super();
 	        this.chemin = chemin;
 	    }
 

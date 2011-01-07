@@ -3,6 +3,7 @@ package fr.unice.miage.vroomaniacs_plugins.comportements;
 import java.awt.Point;
 import java.util.List;
 
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
@@ -11,6 +12,10 @@ public class ComportementArretStand extends ComportementSuitChemin
 	private long tempStand;
 	private long tempPrec;
     
+	public ComportementArretStand() {
+		super();
+	}
+	
     public ComportementArretStand(List<Point> chemin)
     {
     	super(chemin);

@@ -10,14 +10,19 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 /**
  * @author Anthony
  * Le comportement suit le chemin normal du circuit.
- */public class ComportementSuitVoiture implements ComportementPlugin{
+ */public class ComportementSuitVoiture implements ComportementPlugin {
 
 	    public List<Point> chemin = null;
 	    public int indicePointCourant = 0;
 	    // On considere qu'un objet est passé au point de passage si la distance
 	    // de l'objet a  ce point est < une valeur donnee
 	    public int distanceValidationPassage = 10;
+	    public ComportementSuitVoiture(){
+	    	super();
+	    }
+
 	    public ComportementSuitVoiture(List<Point> chemin) {
+	    	super();
 	        this.chemin = chemin;
 	    }
 
