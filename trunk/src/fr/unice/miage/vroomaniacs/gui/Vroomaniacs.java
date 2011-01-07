@@ -26,7 +26,7 @@ import javax.swing.KeyStroke;
 import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Dessinable;
+import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
 
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
@@ -145,6 +145,13 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		Graphics g2 = this.m_circuitPanel.getGraphics();
 		// Il faut dessiner les voitures sur le circuit avec g2
 		// car le circuit est dans le panel m_circuitPanel
+//		for(Dessinable o : getListeObjetDessinable()){
+//			o.dessineToi(g2);
+//			if(o instanceof Deplacable){
+//				Deplacable od = (Deplacable)o;
+//				od.deplaceToi();
+//			}
+//		}
 		this.validate();
 	}
 	
@@ -176,7 +183,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	public List<Dessinable> getListeObjetDessinable() {
 		List<Dessinable> objetsADessiner = new ArrayList<Dessinable>();
 		for(Joueur j : m_joueurs){
-			objetsADessiner.add(j.getObjetAnime());
+//			objetsADessiner.add(j.getObjetAnime());
 		}
 		return objetsADessiner;
 	}
