@@ -29,30 +29,33 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	    }
 
 	    public void deplace(ObjetAnimePlugin o) {
-	    	super.deplace(o);
-	    	if(!m_voitureSet){
-	    		int index = o.getJeu().getListeObjetDessinable().indexOf(o);
-	    		//On suit soit le joueur entré avant nous ou le dernier arrivé si on est le premier arrivé
-	    		this.m_voitureASuivre = index==0?(ObjetAnime)o.getJeu().getListeObjetDessinable().get(o.getJeu().getListeObjetDessinable().size()-1):(ObjetAnime)o.getJeu().getListeObjetDessinable().get(index);
-	    		m_voitureSet = true;
-	    	}
-	    	
-	    	//Si on est proche de la voiture à suivre, on se calle sur sa vitesse et son chemin
-	    	if (Utils.distance(o.getXPos(), o.getYPos(), (int)m_voitureASuivre.getXPos(),(int)m_voitureASuivre.getYPos()) < distanceValidationPassage) {
-	    		// Nouvelle direction a suivre
-		        double dx = m_voitureASuivre.getXPos() - o.getXPos() - distanceValidationPassage;
-		        double dy = m_voitureASuivre.getYPos() - o.getYPos() - distanceValidationPassage;
-		        o.setDirection(Math.atan2(dy, dx));
-		        o.normaliseDirection();
-		        o.setVitesse(m_voitureASuivre.getVitesse());
+	    	if(o.getJeu().getListeObjetDessinable().size()==1){
+	    		super.deplace(o);
 	    	} else {
-	    	//Sinon on suit le circuit à une vitesse superieur à celle du joueur suivi 
-	    		if(!m_vitesseSet){
-	    			o.setVitesse(m_voitureASuivre.getVitesse() * m_vitesseRattrapage);
-	    			m_vitesseSet = true;
+	    		if(!m_voitureSet){
+	    			int index = o.getJeu().getListeObjetDessinable().indexOf(o);
+	    			//	On suit soit le joueur entré avant nous ou le dernier arrivé si on est le premier arrivé
+	    			this.m_voitureASuivre = index==0?(ObjetAnime)o.getJeu().getListeObjetDessinable().get(o.getJeu().getListeObjetDessinable().size()-1):(ObjetAnime)o.getJeu().getListeObjetDessinable().get(index);
+	    			m_voitureSet = true;
+	    		} else {
+	    			//Si on est proche de la voiture à suivre, on se calle sur sa vitesse et son chemin
+	    			if (Utils.distance(o.getXPos(), o.getYPos(), (int)m_voitureASuivre.getXPos(),(int)m_voitureASuivre.getYPos()) < distanceValidationPassage) {
+	    				//Nouvelle direction a suivre
+	    				double dx = m_voitureASuivre.getXPos() - o.getXPos() - distanceValidationPassage;
+	    				double dy = m_voitureASuivre.getYPos() - o.getYPos() - distanceValidationPassage;
+	    				o.setDirection(Math.atan2(dy, dx));
+	    				o.normaliseDirection();
+	    				o.setVitesse(m_voitureASuivre.getVitesse());
+	    			} else {
+	    				//Sinon on suit le circuit à une vitesse superieur à celle du joueur suivi 
+	    				if(!m_vitesseSet){
+	    					o.setVitesse(m_voitureASuivre.getVitesse() * m_vitesseRattrapage);
+	    					m_vitesseSet = true;
+	    				}
+	    				super.deplace(o);
+	    			}
 	    		}
 	    	}
-	        
 	    }
 
 		@Override

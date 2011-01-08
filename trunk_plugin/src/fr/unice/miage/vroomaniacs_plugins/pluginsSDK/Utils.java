@@ -8,7 +8,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IRoute;
 
 public abstract class Utils {
 	
-public static final Dimension ELEM_DIM = new Dimension(60,60);
+public static final Dimension ELEM_DIM = new Dimension(80,80);
 	
 	/**
 	 * @param p_element

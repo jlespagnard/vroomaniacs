@@ -16,7 +16,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	    public int indicePointCourant = 0;
 	    // On considere qu'un objet est passé au point de passage si la distance
 	    // de l'objet a  ce point est < une valeur donnee
-	    public int distanceValidationPassage = 15;
+	    public int distanceValidationPassage = 30;
 	    boolean circuitSet = false;
 	    
 	    public ComportementSuitChemin(){
@@ -49,7 +49,6 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	        o.setDirection(o.getDirection()+o.getAccelerationAngulaire());
 	        o.setXPos(o.getXPos()+(o.getVitesse()*Math.cos(o.getDirection())));
 	        o.setYPos(o.getYPos()+(o.getVitesse()*Math.sin(o.getDirection())));
-	       
 	        // On garde la direction entre 0 et 2*PI
 	        o.normaliseDirection();
 	    }

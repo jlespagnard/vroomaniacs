@@ -3,9 +3,8 @@ package fr.unice.miage.vroomaniacs_plugins.comportements;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 
-public class ComportementBoost extends ComportementSuitChemin implements ComportementPlugin{
+public class ComportementBoost implements ComportementPlugin{
 	private boolean boostDone = false;
-	private double oldVitesse;
 	
 	public ComportementBoost(){
 	}
