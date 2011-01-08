@@ -1,7 +1,7 @@
 package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Vaisseau extends ObjetAnime {
-	public Audi() {
+	public Vaisseau() {
 		super("imagesObjetsAnimes/vaisseau.png",2);
 	}
 
@@ -12,7 +12,7 @@ public class Vaisseau extends ObjetAnime {
 
 	@Override
 	public String getDescription() {
-		return "Un objet animés de type vaisseau de l'espace.";
+		return "Un objet animé de type vaisseau de l'espace.";
 	}
 
 	@Override

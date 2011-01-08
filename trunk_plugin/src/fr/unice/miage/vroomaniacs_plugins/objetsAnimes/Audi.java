@@ -12,7 +12,7 @@ public class Audi extends ObjetAnime {
 
 	@Override
 	public String getDescription() {
-		return "Un objet animés de type Audi a3.";
+		return "Un objet animé de type Audi a3.";
 	}
 
 	@Override

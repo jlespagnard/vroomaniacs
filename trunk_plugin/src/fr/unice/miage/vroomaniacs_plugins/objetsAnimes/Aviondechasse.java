@@ -1,7 +1,7 @@
 package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Aviondechasse extends ObjetAnime {
-	public Audi() {
+	public Aviondechasse() {
 		super("imagesObjetsAnimes/aviondechasse.png",1.8);
 	}
 
@@ -12,7 +12,7 @@ public class Aviondechasse extends ObjetAnime {
 
 	@Override
 	public String getDescription() {
-		return "Un objet animés de type avion de chasse.";
+		return "Un objet animé de type avion de chasse.";
 	}
 
 	@Override

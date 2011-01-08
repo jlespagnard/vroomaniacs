@@ -12,7 +12,7 @@ public class Moto extends ObjetAnime {
 
 	@Override
 	public String getDescription() {
-		return "Un objet animés de type moto.";
+		return "Un objet animé de type moto.";
 	}
 
 	@Override

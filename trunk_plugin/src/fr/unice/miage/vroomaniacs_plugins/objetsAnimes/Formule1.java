@@ -12,7 +12,7 @@ public class Formule1 extends ObjetAnime {
 
 	@Override
 	public String getDescription() {
-		return "Un objet animés de type Formule 1.";
+		return "Un objet animé de type Formule 1.";
 	}
 
 	@Override
