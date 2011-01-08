@@ -18,6 +18,9 @@ public class Joueur {
 		this.m_objetAnime.setXPos(p.getX());
 		this.m_objetAnime.setYPos(p.getY());
 		this.m_objetAnime.setJeu(jeu);
+		double dx = Circuit.getInstance().getChemin().get(1).getX() - p.x;
+        double dy = Circuit.getInstance().getChemin().get(1).getY() - p.y;
+        this.m_objetAnime.setDirection(Math.atan2(dy, dx));
 	}
 
 	public String getNom() {
