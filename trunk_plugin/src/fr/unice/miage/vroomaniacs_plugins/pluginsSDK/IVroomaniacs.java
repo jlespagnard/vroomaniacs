@@ -9,4 +9,5 @@ public interface IVroomaniacs {
 	public void ajouteObjet(Dessinable o);
 	public List<Dessinable> getListeObjetDessinable();
 	public Point getStand();
+	public List<Point> getChemin();
 }

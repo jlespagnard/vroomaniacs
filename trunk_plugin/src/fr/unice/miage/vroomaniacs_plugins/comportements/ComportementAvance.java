@@ -21,7 +21,7 @@ public class ComportementAvance implements ComportementPlugin
 
 	@Override
 	public String getName() {
-		return "ComportementAvancedsjdsfijsd";
+		return "Comportement Avance";
 	}
 
 	@Override
