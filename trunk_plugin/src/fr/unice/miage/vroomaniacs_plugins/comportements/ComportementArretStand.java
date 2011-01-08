@@ -29,7 +29,12 @@ public class ComportementArretStand extends ComportementSuitChemin implements Co
 	}
 	public ComportementArretStand(IVroomaniacs p_vroomaniacs)
 	{
+		super();
 		stand = p_vroomaniacs.getStand();
+	}
+	public ComportementArretStand()
+	{
+		super();
 	}
 	public void setActive(boolean bool)
 	{
@@ -103,5 +108,34 @@ public class ComportementArretStand extends ComportementSuitChemin implements Co
 			suitChemin(o);
 			active = true;
 		}
+	}
+	@Override
+	public boolean canProcess(Object arg0) {
+		return true;
+	}
+
+	@Override
+	public String getDescription() {
+		return "Comportement Arret Stand : La voiture s'arrete au stand ";
+	}
+
+	@Override
+	public String getName() {
+		return "Comportement Arret Stand";
+	}
+
+	@Override
+	public Class getType() {
+		return ComportementArretStand.class;
+	}
+
+	@Override
+	public String getVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public boolean matches(Class arg0, String arg1, Object arg2) {
+		return true;
 	}
 }
