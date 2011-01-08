@@ -7,46 +7,37 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
-import fr.unice.miage.vroomaniacs.persistance.Memento;
-import fr.unice.miage.vroomaniacs_plugins.comportements.ComportementAvance;
-import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Formule1;
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
-import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 import fr.unice.plugin.Plugin;
-import fr.unice.plugin.PluginManager;
 
 @SuppressWarnings("serial")
 public class NouvellePartie extends JFrame {
-	
 	private JPanel m_panelListeJoueurs = null;
+	private List<Joueur> m_joueurs = new LinkedList<Joueur>();
 	
 	public void construireListeJoueurs() {
 		if(this.m_panelListeJoueurs != null) {
 			this.remove(this.m_panelListeJoueurs);
 		}
-		this.m_panelListeJoueurs = new JPanel(new GridLayout(Vroomaniacs.m_joueurs.size()+1, 1));
+		this.m_panelListeJoueurs = new JPanel(new GridLayout(this.m_joueurs.size()+1,1));
 		this.add(this.m_panelListeJoueurs, BorderLayout.CENTER);
 		
 		JPanel panelNomJoueur;
 		JPanel panelObjetAnimeJoueur;
 		JPanel panelBoutonJoueur;
-		for(final Joueur joueur : Vroomaniacs.m_joueurs) {
+		for(final Joueur joueur : this.m_joueurs) {
 			panelNomJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			this.m_panelListeJoueurs.add(panelNomJoueur);
 			panelNomJoueur.add(new JLabel("Nom : "));
@@ -75,20 +66,17 @@ public class NouvellePartie extends JFrame {
 		panelNomJoueur.add(new JLabel("Nom : "));
 		panelNomJoueur.add(txtNomNouveauJoueur);
 		
-		PluginManager manager = PluginManager.getPluginManager();
-		try {
-			manager.addJarURLsInDirectories(new URL[]{new URL("file:plugins")});
-		} catch (MalformedURLException e2) {
-			e2.printStackTrace();
-		}
-		
 		panelObjetAnimeJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		this.m_panelListeJoueurs.add(panelObjetAnimeJoueur);
 		panelObjetAnimeJoueur.add(new JLabel("Véhicule : "));
 		
-		manager.loadPlugins(ObjetAnimePlugin.class);
-		ObjetAnimePlugin[] pluginsObjetAnime = (ObjetAnimePlugin[])manager.getPluginInstances(ObjetAnimePlugin.class);
-		final JComboBox cmbObjetsAnimes = new JComboBox(pluginsObjetAnime);
+		List<ObjetAnimePlugin> objetsAnimes = new LinkedList<ObjetAnimePlugin>();
+		for(Plugin plugin : Vroomaniacs.pluginManager.getPluginInstances()) {
+			if(plugin instanceof ObjetAnimePlugin) {
+				objetsAnimes.add((ObjetAnimePlugin)plugin);
+			}
+		}
+		final JComboBox cmbObjetsAnimes = new JComboBox(objetsAnimes.toArray());
 		panelObjetAnimeJoueur.add(cmbObjetsAnimes);
 		
 		panelBoutonJoueur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -113,21 +101,20 @@ public class NouvellePartie extends JFrame {
 					Joueur joueur = null;
 					try {
 						ObjetAnimePlugin objetAnimeJoueur = ((ObjetAnimePlugin)cmbObjetsAnimes.getSelectedItem()).getClass().newInstance();
-						joueur = new Joueur(Vroomaniacs.new_id, txtNomNouveauJoueur.getText(),objetAnimeJoueur);
+						joueur = new Joueur(txtNomNouveauJoueur.getText(),objetAnimeJoueur);
 					} catch (InstantiationException e1) {
 						e1.printStackTrace();
 					} catch (IllegalAccessException e1) {
 						e1.printStackTrace();
 					}
 					ajouterJoueur(joueur);
-					Vroomaniacs.new_id++;
 				}
 			}
 		});
 	}
 	
 	public boolean joueurExistant(String p_nom) {
-		for(Joueur joueur : Vroomaniacs.m_joueurs) {
+		for(Joueur joueur : this.m_joueurs) {
 			if(joueur.getNom().equals(p_nom)) {
 				return true;
 			}
@@ -137,7 +124,7 @@ public class NouvellePartie extends JFrame {
 	
 	
 	public void ajouterJoueur(Joueur p_joueur) {
-		Vroomaniacs.m_joueurs.add(p_joueur);
+		this.m_joueurs.add(p_joueur);
 		this.construireListeJoueurs();
 		this.pack();
 		this.repaint();
@@ -145,12 +132,12 @@ public class NouvellePartie extends JFrame {
 	
 	public void supprimerJoueur(Joueur p_joueur) {
 		int index = -1;
-		for(Joueur joueur : Vroomaniacs.m_joueurs) {
+		for(Joueur joueur : this.m_joueurs) {
 			if(joueur.getNom().equals(p_joueur.getNom())) {
-				index = Vroomaniacs.m_joueurs.indexOf(joueur);
+				index = this.m_joueurs.indexOf(joueur);
 			}
 		}
-		Vroomaniacs.m_joueurs.remove(index);
+		this.m_joueurs.remove(index);
 		this.construireListeJoueurs();
 		this.pack();
 		this.repaint();
@@ -166,39 +153,17 @@ public class NouvellePartie extends JFrame {
 		JPanel panelBoutons = new JPanel(new FlowLayout(FlowLayout.RIGHT,5,5));
 		this.add(panelBoutons, BorderLayout.SOUTH);
 		
-		JButton btnSelectionCircuit = new JButton("Sélection du circuit");
-		panelBoutons.add(btnSelectionCircuit);
-		btnSelectionCircuit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(NouvellePartie.this);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					Circuit loadedTrack = (Circuit)Memento.objLoading(file);
-					for(IElement elem : loadedTrack) {
-						Circuit.getInstance().addElement(elem);
-					}
-					Circuit.getInstance().estValide();
-					p_parent.refreshCircuit();
-				}
-			}
-		});
-		
 		JButton btnCommencer = new JButton("Commencer");
 		panelBoutons.add(btnCommencer);
 		btnCommencer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(Vroomaniacs.m_joueurs.isEmpty()) {
+				if(m_joueurs.isEmpty()) {
 					JOptionPane.showMessageDialog(NouvellePartie.this,"J'ai jamais vu une course sans coureur.\nEn revanche un gars sans cerveau...","Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
-				}
-				else if(!Circuit.getInstance().estValide()) {
-					JOptionPane.showMessageDialog(NouvellePartie.this,"Sur quoi tu veux rouler ? Faut un circuit boulet !","Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
 					NouvellePartie.this.dispose();
-					p_parent.debuterPartie();
+					p_parent.debuterPartie(m_joueurs);
 				}
 			}
 		});

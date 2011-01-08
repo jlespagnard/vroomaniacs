@@ -124,7 +124,6 @@ public class Circuit implements Iterable<IElement>, Serializable {
 		for(String id : ids) {
 			this.m_elements.put(id, newElements.get(id));
 		}
-		System.out.println(this.m_elements.keySet().toString());
 	}
 	
 	private void construireChemin() {
