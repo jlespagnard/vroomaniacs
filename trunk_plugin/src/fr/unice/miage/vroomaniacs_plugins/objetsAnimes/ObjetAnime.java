@@ -1,7 +1,9 @@
 package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -137,6 +139,11 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     }
     
     public void dessineToi(Graphics g) {
+    	AffineTransform t = new AffineTransform();
+    	t.translate(m_xPos, m_yPos);
+    	t.rotate(m_direction);
+    	t.translate(-m_xPos, -m_yPos);
+    	((Graphics2D)g).setTransform(t);
         g.drawImage(this.m_image.getImage(), (int)this.m_xPos, (int)this.m_yPos, 
         		(int)(this.m_xPos+100*Math.cos(this.m_direction)), 
         		(int)(this.m_yPos+100*Math.sin(this.m_direction)), 
