@@ -35,4 +35,3 @@ public class Vaisseau extends ObjetAnime {
 		return true;
 	}
 }
-
