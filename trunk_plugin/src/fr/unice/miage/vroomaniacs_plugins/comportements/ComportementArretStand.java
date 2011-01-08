@@ -73,6 +73,7 @@ public class ComportementArretStand extends ComportementSuitChemin implements Co
 	@Override
 	public void deplace(ObjetAnimePlugin o)
 	{
+		stand = o.getJeu().getStand();
 		if(Utils.distance(o.getXPos(), o.getYPos(), stand.x,stand.y)<30)
 		{//si le stand est renseigné, que la distance est sufisante, et que le comportment doit se faire
 			if(fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils.distance(o.getXPos(), o.getYPos(), stand.x,stand.y)<10 && active)
