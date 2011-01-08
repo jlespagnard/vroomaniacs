@@ -26,6 +26,7 @@ import fr.unice.plugin.Plugin;
 public class NouvellePartie extends JFrame {
 	private JPanel m_panelListeJoueurs = null;
 	private List<Joueur> m_joueurs = new LinkedList<Joueur>();
+	private Vroomaniacs m_parent;
 	
 	public void construireListeJoueurs() {
 		if(this.m_panelListeJoueurs != null) {
@@ -101,7 +102,7 @@ public class NouvellePartie extends JFrame {
 					Joueur joueur = null;
 					try {
 						ObjetAnimePlugin objetAnimeJoueur = ((ObjetAnimePlugin)cmbObjetsAnimes.getSelectedItem()).getClass().newInstance();
-						joueur = new Joueur(txtNomNouveauJoueur.getText(),objetAnimeJoueur);
+						joueur = new Joueur(txtNomNouveauJoueur.getText(),objetAnimeJoueur,m_parent);
 					} catch (InstantiationException e1) {
 						e1.printStackTrace();
 					} catch (IllegalAccessException e1) {
@@ -147,6 +148,8 @@ public class NouvellePartie extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
+		
+		this.m_parent = p_parent;
 		
 		this.construireListeJoueurs();
 		
