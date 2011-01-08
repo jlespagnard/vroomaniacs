@@ -61,7 +61,7 @@ public class NouvellePartie extends JFrame {
 			});
 		}
 		
-		panelNomJoueur = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+		panelNomJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		this.m_panelListeJoueurs.add(panelNomJoueur);
 		final JTextField txtNomNouveauJoueur = new JTextField(10);
 		panelNomJoueur.add(new JLabel("Nom : "));
@@ -99,7 +99,6 @@ public class NouvellePartie extends JFrame {
 					JOptionPane.showMessageDialog(NouvellePartie.this,message,"Erreur d'ajout de joueur",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					
 					Joueur joueur = null;
 					try {
 						ObjetAnimePlugin objetAnimeJoueur = ((ObjetAnimePlugin)cmbObjetsAnimes.getSelectedItem()).getClass().newInstance();

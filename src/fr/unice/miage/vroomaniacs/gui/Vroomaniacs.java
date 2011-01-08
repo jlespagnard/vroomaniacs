@@ -15,7 +15,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,12 +33,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
+import fr.unice.miage.vroomaniacs.circuit.BufferedCircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
 import fr.unice.miage.vroomaniacs_plugins.builders.element.Element;
-import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Deplacable;
 import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
@@ -51,15 +50,16 @@ import fr.unice.plugin.PluginManager;
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	private final int TEMPS_ENTRE_IMAGES = 100;
-	public static PluginManager pluginManager;
+	public final static PluginManager pluginManager = PluginManager.getPluginManager();;
 	
-	private JPanel m_circuitPanel;
-	private JScrollPane m_scrollPanelEst;
-	private JPanel m_panelJoueurs;
-	private JPanel m_panelComportements;
+	private JPanel m_circuitPanel = null;
+	private JScrollPane m_scrollPanelEst = null;
+	private JPanel m_panelJoueurs = null;
+	private JPanel m_panelComportements = null;
 	private Vector<Joueur> m_joueurs = new Vector<Joueur>();
 	private	Joueur m_joueurSelectionne = null;
-	private Map<JCheckBox,ComportementPlugin> m_comportements;
+	private Map<JCheckBox,ComportementPlugin> m_comportements = null;
+	private List<Dessinable> m_objetsAnimes = new LinkedList<Dessinable>();
 	
 	public Vroomaniacs() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -70,7 +70,6 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		
-		pluginManager = PluginManager.getPluginManager();
 		try {
 			pluginManager.addJarURLsInDirectories(new URL[]{new URL("file:plugins")});
 		} catch (MalformedURLException e) {
@@ -92,11 +91,9 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 					public void actionPerformed(ActionEvent e) {
 						JCheckBox source = (JCheckBox)e.getSource();
 						if(source.isSelected()) {
-							System.out.println("Ajout de " + m_comportements.get(source).toString() + " à " + m_joueurSelectionne.getNom());
 							m_joueurSelectionne.getObjetAnime().ajouterComportement(m_comportements.get(source));
 						}
 						else {
-							System.out.println("Suppression de " + m_comportements.get(source).toString() + " à " + m_joueurSelectionne.getNom());
 							m_joueurSelectionne.getObjetAnime().supprimerComportement(m_comportements.get(source));
 						}
 						construireCheckBoxComportements();
@@ -108,8 +105,10 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		
 		this.construireMenu();
 		
-		this.m_circuitPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		this.add(this.m_circuitPanel,BorderLayout.CENTER);
+		this.m_circuitPanel = new BufferedCircuitPanel(this);
+		JPanel englobeCircuit = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		englobeCircuit.add(this.m_circuitPanel);
+		this.add(englobeCircuit,BorderLayout.CENTER);
 		
 		JPanel panelEst = new JPanel(new BorderLayout());
 		this.m_scrollPanelEst = new JScrollPane(panelEst);
@@ -185,27 +184,33 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	
 	public void refreshCircuit() {
 		this.m_circuitPanel.removeAll();
-		JPanel circuit = new JPanel();
-		this.m_circuitPanel.add(circuit);
 		
 		List<IElement> elements = new LinkedList<IElement>();
 		for(IElement elem : Circuit.getInstance()) {
 			elem.setBorderElement(null);
 			elements.add(elem);
-			circuit.add((Element)elem);
+			this.m_circuitPanel.add((Element)elem);
 		}
 		
 		if(!elements.isEmpty()) {
 			int x = Integer.parseInt(elements.get(elements.size()-1).getId().split("_")[0]);
 			int y = Integer.parseInt(elements.get(elements.size()-1).getId().split("_")[1]);
-			circuit.setLayout(new GridLayout(x+1,y+1));
+			this.m_circuitPanel.setLayout(new GridLayout(x+1,y+1));
 		}
+		
 		Vroomaniacs.this.validate();
 		Vroomaniacs.this.repaint();
 	}
 
 	public void debuterPartie(List<Joueur> p_joueurs) {
 		this.m_joueurs = new Vector<Joueur>(p_joueurs);
+		
+		this.m_objetsAnimes.clear();
+		for(Joueur joueur : this.m_joueurs) {
+			if(joueur.getObjetAnime() instanceof Dessinable) {
+				this.m_objetsAnimes.add((Dessinable)joueur.getObjetAnime());
+			}
+		}
 		
 		this.m_panelJoueurs.removeAll();
 
@@ -256,18 +261,14 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	}
 
 	@Override
+	public void update(Graphics g) {
+		this.paint(g);
+	}
+	
+	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		// Il faut dessiner les voitures sur le circuit avec g2
-		// car le circuit est dans le panel m_circuitPanel
-		for(Dessinable o : getListeObjetDessinable()){
-			o.dessineToi(g);
-			if(o instanceof Deplacable){
-				Deplacable od = (Deplacable)o;
-				od.deplaceToi();
-			}
-		}
-		this.validate();
+		this.m_circuitPanel.repaint();
 	}
 	
 	@Override
@@ -277,7 +278,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
         tempsPrecedent = System.currentTimeMillis();
 
         while (true) {
-            repaint();
+            this.m_circuitPanel.repaint();
 
             tempsPrisPourImagePrecedente = System.currentTimeMillis() - tempsPrecedent;
             tempsAttente = TEMPS_ENTRE_IMAGES - tempsPrisPourImagePrecedente;
@@ -296,11 +297,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 
 	@Override
 	public List<Dessinable> getListeObjetDessinable() {
-		List<Dessinable> objetsADessiner = new ArrayList<Dessinable>();
-		for(Joueur j : m_joueurs){
-			objetsADessiner.add((Dessinable)j.getObjetAnime());
-		}
-		return objetsADessiner;
+		return this.m_objetsAnimes;
 	}
 	
 	public static void main(String[] args) {
