@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -34,10 +35,10 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
-import fr.unice.miage.vroomaniacs.circuit.CircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
+import fr.unice.miage.vroomaniacs_plugins.builders.element.Element;
 import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Deplacable;
 import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
@@ -52,15 +53,13 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	private final int TEMPS_ENTRE_IMAGES = 100;
 	public static PluginManager pluginManager;
 	
-	private CircuitPanel m_circuitPanel = new CircuitPanel();
+	private JPanel m_circuitPanel;
 	private JScrollPane m_scrollPanelEst;
 	private JPanel m_panelJoueurs;
 	private JPanel m_panelComportements;
 	private Vector<Joueur> m_joueurs = new Vector<Joueur>();
 	private	Joueur m_joueurSelectionne = null;
 	private Map<JCheckBox,ComportementPlugin> m_comportements;
-
-	
 	
 	public Vroomaniacs() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -109,6 +108,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		
 		this.construireMenu();
 		
+		this.m_circuitPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		this.add(this.m_circuitPanel,BorderLayout.CENTER);
 		
 		JPanel panelEst = new JPanel(new BorderLayout());
@@ -184,9 +184,22 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	}
 	
 	public void refreshCircuit() {
-		Vroomaniacs.this.remove(m_circuitPanel);
-		m_circuitPanel = new CircuitPanel();
-		Vroomaniacs.this.add(m_circuitPanel, BorderLayout.CENTER);
+		this.m_circuitPanel.removeAll();
+		JPanel circuit = new JPanel();
+		this.m_circuitPanel.add(circuit);
+		
+		List<IElement> elements = new LinkedList<IElement>();
+		for(IElement elem : Circuit.getInstance()) {
+			elem.setBorderElement(null);
+			elements.add(elem);
+			circuit.add((Element)elem);
+		}
+		
+		if(!elements.isEmpty()) {
+			int x = Integer.parseInt(elements.get(elements.size()-1).getId().split("_")[0]);
+			int y = Integer.parseInt(elements.get(elements.size()-1).getId().split("_")[1]);
+			circuit.setLayout(new GridLayout(x+1,y+1));
+		}
 		Vroomaniacs.this.validate();
 		Vroomaniacs.this.repaint();
 	}
@@ -245,11 +258,10 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		Graphics g2 = this.m_circuitPanel.getGraphics();
 		// Il faut dessiner les voitures sur le circuit avec g2
 		// car le circuit est dans le panel m_circuitPanel
 		for(Dessinable o : getListeObjetDessinable()){
-			o.dessineToi(g2);
+			o.dessineToi(g);
 			if(o instanceof Deplacable){
 				Deplacable od = (Deplacable)o;
 				od.deplaceToi();
