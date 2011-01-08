@@ -46,12 +46,12 @@ public class CircuitPanel extends JPanel {
 				panGridGraphic.setColor(Color.MAGENTA);
 				panGridGraphic.setStroke(new BasicStroke(2));
 				Point pointPrecedent = null;
-				for(Point point : Circuit.getInstance().getChemin()) {
-					if(pointPrecedent != null) {
-						panGridGraphic.drawLine(pointPrecedent.x, pointPrecedent.y, point.x, point.y);
-					}
-					pointPrecedent = point;
-				}
+//				for(Point point : Circuit.getInstance().getChemin()) {
+//					if(pointPrecedent != null) {
+//						panGridGraphic.drawLine(pointPrecedent.x, pointPrecedent.y, point.x, point.y);
+//					}
+//					pointPrecedent = point;
+//				}
 			}
 			this.validate();
 		}

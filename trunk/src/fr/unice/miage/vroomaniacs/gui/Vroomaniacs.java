@@ -43,12 +43,13 @@ import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 import fr.unice.plugin.Plugin;
 import fr.unice.plugin.PluginManager;
 
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
-	private final int TEMPS_ENTRE_IMAGES = 20;
+	private final int TEMPS_ENTRE_IMAGES = 100;
 	public static PluginManager pluginManager;
 	
 	private CircuitPanel m_circuitPanel = new CircuitPanel();
@@ -301,7 +302,16 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 
 	@Override
 	public Point getStand() {
-		// TODO Auto-generated method stub
-		return null;
+		//Par defaut le Stand se trouve à coté de la ligne de départ
+		double x = Utils.getPointCentre(Circuit.getInstance().getElementDepart()).getX();
+		double y = Utils.getPointCentre(Circuit.getInstance().getElementDepart()).getY();
+		double largeurRoute = Utils.getLargeurRoute();
+		Point stand = new Point((int)(x+largeurRoute), (int)y);
+		return stand;
+	}
+
+	@Override
+	public List<Point> getChemin() {
+		return Circuit.getInstance().getChemin();
 	}	
 }
