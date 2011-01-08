@@ -2,7 +2,6 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
@@ -14,7 +13,6 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 
 public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePlugin {
     private double m_xPos, m_yPos;
-    private Rectangle m_boiteAnglobante;
     private double m_direction = 2 * Math.PI * Math.random();
     private double m_vitesse = 5 * Math.random() + 3;
     private double m_acceleration = 0;
@@ -25,12 +23,10 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
 
     public ObjetAnime(String p_urlImage) {
     	this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
-    	this.m_boiteAnglobante = new Rectangle((int)this.m_xPos, (int)this.m_yPos, this.m_image.getIconWidth(), this.m_image.getIconHeight());
 	}
     
     public ObjetAnime(String p_urlImage,double coef_vitesse) {
     	this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
-    	this.m_boiteAnglobante = new Rectangle((int)this.m_xPos, (int)this.m_yPos, this.m_image.getIconWidth(), this.m_image.getIconHeight());
     	this.setVitesse(m_vitesse * coef_vitesse); 		
     }
     
@@ -138,26 +134,22 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     	 this.m_listeDesComportements.remove(p_comportement);
     }
 
+    @Override
     public void deplaceToi() {
         for (ComportementPlugin c : this.m_listeDesComportements) {
             c.deplace(this);
         }
     }
     
+    @Override
     public void dessineToi(Graphics g) {
     	AffineTransform t = new AffineTransform();
     	t.translate(m_xPos, m_yPos);
     	t.rotate(m_direction);
     	t.translate(-m_xPos, -m_yPos);
     	((Graphics2D)g).setTransform(t);
-        g.drawImage(this.m_image.getImage(), (int)this.m_xPos, (int)this.m_yPos, 
-        		(int)(this.m_xPos+100*Math.cos(this.m_direction)), 
-        		(int)(this.m_yPos+100*Math.sin(this.m_direction)), 
-        		(int)this.m_boiteAnglobante.getX(), 
-        		(int)this.m_boiteAnglobante.getY(), 
-        		(int)(this.m_boiteAnglobante.getX()+100*Math.cos(this.m_direction)), 
-        		(int)(this.m_boiteAnglobante.getY()+100*Math.sin(this.m_direction)),
-        		null);
+    	    	
+    	g.drawImage(this.m_image.getImage(),(int)this.m_xPos,(int)this.m_yPos,null);
     }
     
     @Override
