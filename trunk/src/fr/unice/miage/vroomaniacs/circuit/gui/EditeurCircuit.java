@@ -1,14 +1,11 @@
 package fr.unice.miage.vroomaniacs.circuit.gui;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,8 +14,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -33,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
+import fr.unice.miage.vroomaniacs.gui.Vroomaniacs;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
 import fr.unice.miage.vroomaniacs_plugins.builders.BuilderHerbe;
 import fr.unice.miage.vroomaniacs_plugins.builders.element.Element;
@@ -40,7 +38,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.BuilderPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IEditeurCircuit;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
-import fr.unice.plugin.PluginManager;
+import fr.unice.plugin.Plugin;
 
 @SuppressWarnings("serial")
 public class EditeurCircuit extends JFrame implements IEditeurCircuit {
@@ -90,15 +88,15 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 	}
 	
 	private void construireMenuElementsCircuit() {
-		BuilderPlugin[] builderPlugins = this.getBuilderPlugins();
+		List<BuilderPlugin> builderPlugins = this.getBuilderPlugins();
 		
 		JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		JScrollPane scrollPaneNorth = new JScrollPane(panelNorth);
 		scrollPaneNorth.setPreferredSize(new Dimension(420,(int)(Utils.ELEM_DIM.getHeight()+20)));
 		this.add(scrollPaneNorth, BorderLayout.NORTH);
 		
-		if(builderPlugins != null && builderPlugins.length > 0) {
-			GridLayout gridLabels = new GridLayout(1,builderPlugins.length);
+		if(builderPlugins != null && builderPlugins.size() > 0) {
+			GridLayout gridLabels = new GridLayout(1,builderPlugins.size());
 			gridLabels.setHgap(10);
 			this.m_panelLabels = new JPanel(gridLabels);
 			panelNorth.add(this.m_panelLabels);
@@ -111,16 +109,14 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 		}
 	}
 
-	private BuilderPlugin[] getBuilderPlugins() {
-		PluginManager manager = PluginManager.getPluginManager();
-		try {
-			manager.addJarURLsInDirectories(new URL[]{new URL("file:plugins")});
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
+	private List<BuilderPlugin> getBuilderPlugins() {
+		List<BuilderPlugin> objetsAnimes = new LinkedList<BuilderPlugin>();
+		for(Plugin plugin : Vroomaniacs.pluginManager.getPluginInstances()) {
+			if(plugin instanceof BuilderPlugin) {
+				objetsAnimes.add((BuilderPlugin)plugin);
+			}
 		}
-		manager.loadPlugins();
-		
-		return (BuilderPlugin[])manager.getPluginInstances(BuilderPlugin.class);
+		return objetsAnimes;
 	}
 	
 	/**
@@ -158,6 +154,7 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Sélectionnez le circuit à charger");
 				int returnVal = fc.showOpenDialog(EditeurCircuit.this);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
@@ -180,10 +177,18 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 			public void actionPerformed(ActionEvent e) {
 				if(Circuit.getInstance().estValide()) {
 					JFileChooser fc = new JFileChooser();
+					fc.setDialogTitle("Sélectionnez le fichier de destination");
 					int returnVal = fc.showSaveDialog(EditeurCircuit.this);
 					if(returnVal == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
-						new Memento(Circuit.getInstance(),file);
+						int returnConfirm = JFileChooser.APPROVE_OPTION;
+						if(file.exists()) {
+							String message = "Le fichier "+file.getName()+" existe déjà : voulez-vous le remplacer ?";
+							returnConfirm = JOptionPane.showConfirmDialog(EditeurCircuit.this, message, "Fichier existant", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+						}
+						if(returnConfirm == JFileChooser.APPROVE_OPTION) {
+							new Memento(Circuit.getInstance(),file);
+						}
 					}
 				}
 				else {
@@ -274,19 +279,6 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 			for(IElement elem : Circuit.getInstance()) {
 				this.m_panelGrid.add((Element)elem);
 			}
-			
-			/* TODO : code a supprimer, c'est juste pour verifier le chemin */
-			Graphics2D panGridGraphic = (Graphics2D)this.m_panelGrid.getGraphics();
-			panGridGraphic.setColor(Color.MAGENTA);
-			panGridGraphic.setStroke(new BasicStroke(2));
-			Point pointPrecedent = null;
-			for(Point point : Circuit.getInstance().getChemin()) {
-				if(pointPrecedent != null) {
-					panGridGraphic.drawLine(pointPrecedent.x, pointPrecedent.y, point.x, point.y);
-				}
-				pointPrecedent = point;
-			}
-			/* Fin code a supprimer */
 		}
 		this.validate();
 	}
