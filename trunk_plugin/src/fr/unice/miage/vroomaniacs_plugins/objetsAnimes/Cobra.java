@@ -1,8 +1,8 @@
 package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
-public class Formule1 extends ObjetAnime {
-	public Formule1() {
-		super("imagesObjetsAnimes/formule1.png",1.5);
+public class Cobra extends ObjetAnime {
+	public Cobra() {
+		super("imagesObjetsAnimes/cobra.png",1);
 	}
 
 	@Override
@@ -12,17 +12,17 @@ public class Formule1 extends ObjetAnime {
 
 	@Override
 	public String getDescription() {
-		return "Un objet animés de type Formule 1.";
+		return "Un objet animés de type cobra.";
 	}
 
 	@Override
 	public String getName() {
-		return "Formule 1";
+		return "Cobra";
 	}
 
 	@Override
 	public Class getType() {
-		return Formule1.class;
+		return Cobra.class;
 	}
 
 	@Override
@@ -35,3 +35,4 @@ public class Formule1 extends ObjetAnime {
 		return true;
 	}
 }
+

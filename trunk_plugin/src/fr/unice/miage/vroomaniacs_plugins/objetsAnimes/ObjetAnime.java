@@ -28,6 +28,12 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     	this.m_boiteAnglobante = new Rectangle((int)this.m_xPos, (int)this.m_yPos, this.m_image.getIconWidth(), this.m_image.getIconHeight());
 	}
     
+    public ObjetAnime(String p_urlImage,double coef_vitesse) {
+    	this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
+    	this.m_boiteAnglobante = new Rectangle((int)this.m_xPos, (int)this.m_yPos, this.m_image.getIconWidth(), this.m_image.getIconHeight());
+    	this.setVitesse(m_vitesse * coef_vitesse); 		
+    }
+    
     @Override
     public void normaliseDirection() {
         if (this.m_direction < 0) {

@@ -1,8 +1,8 @@
 package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
-public class Formule1 extends ObjetAnime {
-	public Formule1() {
-		super("imagesObjetsAnimes/formule1.png",1.5);
+public class Moto extends ObjetAnime {
+	public Moto() {
+		super("imagesObjetsAnimes/moto.png",1.2);
 	}
 
 	@Override
@@ -12,17 +12,17 @@ public class Formule1 extends ObjetAnime {
 
 	@Override
 	public String getDescription() {
-		return "Un objet animés de type Formule 1.";
+		return "Un objet animés de type moto.";
 	}
 
 	@Override
 	public String getName() {
-		return "Formule 1";
+		return "Moto";
 	}
 
 	@Override
 	public Class getType() {
-		return Formule1.class;
+		return Moto.class;
 	}
 
 	@Override
@@ -35,3 +35,4 @@ public class Formule1 extends ObjetAnime {
 		return true;
 	}
 }
+
