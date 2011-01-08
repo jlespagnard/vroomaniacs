@@ -1,12 +1,13 @@
 package fr.unice.miage.vroomaniacs_plugins.pluginsSDK;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
 import fr.unice.plugin.Plugin;
 
-public interface ObjetAnimePlugin extends Plugin {
+public interface ObjetAnimePlugin extends Plugin, Serializable{
 	public double getXPos();
 	public void setXPos(double p_xPos);
 	public double getYPos();

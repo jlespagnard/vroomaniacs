@@ -3,6 +3,7 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -11,7 +12,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 
-public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePlugin {
+public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePlugin, Serializable {
     private double m_xPos, m_yPos;
     private double m_direction = 2 * Math.PI * Math.random();
     private double m_vitesse = 5 * Math.random() + 3;
