@@ -29,12 +29,14 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import fr.unice.miage.vroomaniacs.circuit.BufferedCircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
+import fr.unice.miage.vroomaniacs.circuit.gui.EditeurCircuit;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
@@ -123,6 +125,8 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		panelNorthEst.add(this.m_panelComportements,BorderLayout.NORTH);
 		panelEst.add(panelNorthEst,BorderLayout.CENTER);
 		
+		
+		
 		this.pack();
 		this.setVisible(true);
 	}
@@ -130,6 +134,8 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	private void construireMenu() {
 		JMenuBar menu = new JMenuBar();
 		this.add(menu, BorderLayout.NORTH);
+		
+		
 		
 		JMenu menuFichier = new JMenu("Fichier");
 		menu.add(menuFichier);
@@ -178,6 +184,55 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new MenuEditeurCircuit();
+			}
+		});
+		
+		JMenu menuSave = new JMenu("Persistance");
+		menu.add(menuSave);
+		JMenuItem itemSave = new JMenuItem("Sauvegarder",new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/disquette.png")));
+		menuSave.add(itemSave);
+		itemSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Sélectionnez le fichier de destination");
+				int returnVal = fc.showSaveDialog(Vroomaniacs.this);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					int returnConfirm = JFileChooser.APPROVE_OPTION;
+					if(file.exists()) {
+						String message = "Le fichier "+file.getName()+" existe déjà : voulez-vous le remplacer ?";
+						returnConfirm = JOptionPane.showConfirmDialog(Vroomaniacs.this, message, "Fichier existant", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+					}
+					if(returnConfirm == JFileChooser.APPROVE_OPTION) {
+						/*for(int i=0;i<m_joueurs.size();i++)
+						{
+							System.out.println(m_joueurs.get(i).getNom());
+						}*/
+						new Memento(m_joueurs,file);
+					}
+				}
+			}
+		});
+		
+		JMenuItem itemLoad = new JMenuItem("Charger",new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/charger.png")));
+		menuSave.add(itemLoad);
+		itemLoad.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Sélectionnez le circuit à charger");
+				int returnVal = fc.showOpenDialog(Vroomaniacs.this);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					m_joueurs = (Vector<Joueur>)Memento.objLoading(file);
+					/*for(int i=0;i<m_joueurs.size();i++)
+					{
+						System.out.println(m_joueurs.get(i).getNom());
+					}*/
+				}
 			}
 		});
 	}
