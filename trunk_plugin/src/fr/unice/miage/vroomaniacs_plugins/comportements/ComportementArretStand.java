@@ -5,12 +5,16 @@ package fr.unice.miage.vroomaniacs_plugins.comportements;
 import java.awt.Point;
 import java.util.List;
 
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 
 
-public class ComportementArretStand extends ComportementSuitChemin{
+
+
+public class ComportementArretStand extends ComportementSuitChemin implements ComportementPlugin{
 	private List<Point> chem;
 	private Point stand;
 	private int lastPoint = 0;
@@ -42,7 +46,7 @@ public class ComportementArretStand extends ComportementSuitChemin{
             o.setXPos(o.getXPos()+(o.getVitesse()*Math.cos(o.getDirection())));
 	        o.setYPos(o.getYPos()+(o.getVitesse()*Math.sin(o.getDirection())));
             
-			if(fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils.distance(o.getXPos(),o.getYPos(), chem.get(lastPoint).x, chem.get(lastPoint).y)< 20)
+			if(Utils.distance(o.getXPos(),o.getYPos(), chem.get(lastPoint).x, chem.get(lastPoint).y)< 20)
 			{
 				lastPoint ++;
 			}
@@ -64,7 +68,7 @@ public class ComportementArretStand extends ComportementSuitChemin{
 	@Override
 	public void deplace(ObjetAnimePlugin o)
 	{
-		if(fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils.distance(o.getXPos(), o.getYPos(), stand.x,stand.y)<30)
+		if(Utils.distance(o.getXPos(), o.getYPos(), stand.x,stand.y)<30)
 		{//si le stand est renseigné, que la distance est sufisante, et que le comportment doit se faire
 			if(fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils.distance(o.getXPos(), o.getYPos(), stand.x,stand.y)<10 && active)
 			{
