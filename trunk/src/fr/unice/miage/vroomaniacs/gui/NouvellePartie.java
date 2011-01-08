@@ -61,7 +61,7 @@ public class NouvellePartie extends JFrame {
 			});
 		}
 		
-		panelNomJoueur = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		panelNomJoueur = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 		this.m_panelListeJoueurs.add(panelNomJoueur);
 		final JTextField txtNomNouveauJoueur = new JTextField(10);
 		panelNomJoueur.add(new JLabel("Nom : "));
@@ -78,6 +78,7 @@ public class NouvellePartie extends JFrame {
 			}
 		}
 		final JComboBox cmbObjetsAnimes = new JComboBox(objetsAnimes.toArray());
+		cmbObjetsAnimes.setRenderer(new ComboBoxVehiculesRenderer());
 		panelObjetAnimeJoueur.add(cmbObjetsAnimes);
 		
 		panelBoutonJoueur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
