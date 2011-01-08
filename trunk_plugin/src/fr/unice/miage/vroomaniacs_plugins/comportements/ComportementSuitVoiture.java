@@ -51,12 +51,12 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 		@Override
 		public String getDescription() {
-			return "Comportement Suit Chemin : La voiture suit le chemin de base ";
+			return "Comportement Suit Voiture : La voiture suit le chemin de base ";
 		}
 
 		@Override
 		public String getName() {
-			return "Comportement Suit Chemin";
+			return "Comportement Suit Voiture";
 		}
 
 		@Override
@@ -72,5 +72,10 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 		@Override
 		public boolean matches(Class arg0, String arg1, Object arg2) {
 			return true;
+		}
+		
+		@Override
+		public String toString() {
+			return this.getName();
 		}
 	}

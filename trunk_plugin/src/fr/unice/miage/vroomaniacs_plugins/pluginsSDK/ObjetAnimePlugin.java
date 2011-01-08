@@ -1,5 +1,9 @@
 package fr.unice.miage.vroomaniacs_plugins.pluginsSDK;
 
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+
 import fr.unice.plugin.Plugin;
 
 public interface ObjetAnimePlugin extends Plugin {
@@ -16,9 +20,11 @@ public interface ObjetAnimePlugin extends Plugin {
 	public double getAcceleration();
 	public void setAcceleration(double p_acceleration);
 	public double getAccelerationAngulaire();
+	public ImageIcon getImageIcon();
 	public IVroomaniacs getJeu();
 	public void setJeu(IVroomaniacs p_jeu);
 	public void normaliseDirection();
 	public void ajouterComportement(ComportementPlugin p_comportement);
 	public void supprimerComportement(ComportementPlugin p_comportement);
+	public ArrayList<ComportementPlugin> getComportements();
 }

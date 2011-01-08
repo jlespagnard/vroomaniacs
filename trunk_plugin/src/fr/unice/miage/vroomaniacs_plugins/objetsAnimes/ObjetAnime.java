@@ -101,6 +101,11 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     }
     
     @Override
+    public ImageIcon getImageIcon() {
+    	return this.m_image;
+    }
+    
+    @Override
 	public IVroomaniacs getJeu() {
     	return this.m_leJeu;
     }
@@ -110,6 +115,11 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     	this.m_leJeu = p_jeu;
     }
 
+    @Override
+    public ArrayList<ComportementPlugin> getComportements() {
+    	return this.m_listeDesComportements;
+    }
+    
     @Override
     public void ajouterComportement(ComportementPlugin p_comportement) {
     	this.m_listeDesComportements.add(p_comportement);
@@ -135,5 +145,10 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
         		(int)(this.m_boiteAnglobante.getX()+100*Math.cos(this.m_direction)), 
         		(int)(this.m_boiteAnglobante.getY()+100*Math.sin(this.m_direction)),
         		null);
+    }
+    
+    @Override
+    public String toString() {
+    	return this.getName();
     }
 }

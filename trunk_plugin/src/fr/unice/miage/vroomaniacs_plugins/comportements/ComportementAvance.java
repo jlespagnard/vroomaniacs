@@ -51,5 +51,9 @@ public class ComportementAvance implements ComportementPlugin
         // On garde la direction entre 0 et 2*PI
         o.normaliseDirection();
 	}
-
+	
+	@Override
+	public String toString() {
+		return this.getName();
+	}
 }
