@@ -3,6 +3,7 @@ package fr.unice.miage.vroomaniacs_plugins.comportements;
 import java.awt.Point;
 import java.util.List;
 
+import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.ObjetAnime;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
@@ -10,38 +11,48 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 /**
  * @author Anthony
  * Le comportement suit le chemin normal du circuit.
- */public class ComportementSuitVoiture implements ComportementPlugin {
+ */public class ComportementSuitVoiture extends ComportementSuitChemin implements ComportementPlugin {
 
-	    public List<Point> chemin = null;
-	    public int indicePointCourant = 0;
-	    // On considere qu'un objet est passé au point de passage si la distance
-	    // de l'objet a  ce point est < une valeur donnee
+	    public ObjetAnime m_voitureASuivre;
 	    public int distanceValidationPassage = 10;
+	    private boolean m_voitureSet = false;
+	    private boolean m_vitesseSet = false;
+	    private double m_vitesseRattrapage = 1.6;
+	    
 	    public ComportementSuitVoiture(){
 	    	super();
 	    }
 
-	    public ComportementSuitVoiture(List<Point> chemin) {
+	    public ComportementSuitVoiture(ObjetAnime voitureASuivre) {
 	    	super();
-	        this.chemin = chemin;
+	        this.m_voitureASuivre = voitureASuivre;
 	    }
 
 	    public void deplace(ObjetAnimePlugin o) {
-	        // On recupere les coordonnees du prochain point de passage
-	        Point p = chemin.get(indicePointCourant);
-
-	        // Si on est trop pres du point courant, on passe au point suivant
-	        if (Utils.distance(o.getXPos(), o.getYPos(), p.x, p.y) < distanceValidationPassage) {
-	            // On passe au point suivant
-	            indicePointCourant++;
-	            indicePointCourant %= chemin.size();
-	        }
-
-	        // Nouvelle direction a suivre
-	        double dx = p.x - o.getXPos();
-	        double dy = p.y - o.getYPos();
-	        o.setDirection(Math.atan2(dy, dx));
-	        o.normaliseDirection();
+	    	super.deplace(o);
+	    	if(!m_voitureSet){
+	    		int index = o.getJeu().getListeObjetDessinable().indexOf(o);
+	    		//On suit soit le joueur entré avant nous ou le dernier arrivé si on est le premier arrivé
+	    		this.m_voitureASuivre = index==0?(ObjetAnime)o.getJeu().getListeObjetDessinable().get(o.getJeu().getListeObjetDessinable().size()-1):(ObjetAnime)o.getJeu().getListeObjetDessinable().get(index);
+	    		m_voitureSet = true;
+	    	}
+	    	
+	    	//Si on est proche de la voiture à suivre, on se calle sur sa vitesse et son chemin
+	    	if (Utils.distance(o.getXPos(), o.getYPos(), (int)m_voitureASuivre.getXPos(),(int)m_voitureASuivre.getYPos()) < distanceValidationPassage) {
+	    		// Nouvelle direction a suivre
+		        double dx = m_voitureASuivre.getXPos() - o.getXPos() - distanceValidationPassage;
+		        double dy = m_voitureASuivre.getYPos() - o.getYPos() - distanceValidationPassage;
+		        o.setDirection(Math.atan2(dy, dx));
+		        o.normaliseDirection();
+		        o.setVitesse(m_voitureASuivre.getVitesse());
+	    	} else {
+	    	//Sinon on suit le circuit à une vitesse superieur à celle du joueur suivi 
+	    		if(!m_vitesseSet){
+	    			o.setVitesse(m_voitureASuivre.getVitesse() * m_vitesseRattrapage);
+	    			m_vitesseSet = true;
+	    		}
+	    	}
+	        
 	    }
 
 		@Override
