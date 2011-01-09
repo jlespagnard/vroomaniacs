@@ -15,14 +15,18 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePlugin, Serializable {
-    private double m_xPos, m_yPos, m_oldxPos, m_oldyPos;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private double m_xPos, m_yPos, m_oldxPos, m_oldyPos;
     private double m_direction = 2 * Math.PI * Math.random();
     private double m_vitesse = 2;
     private double m_vitesseOriginale;
     private double m_acceleration = 0;
     private double m_accelerationAngulaire = 0;
     private ArrayList<ComportementPlugin> m_listeDesComportements = new ArrayList<ComportementPlugin>();
-    private IVroomaniacs m_leJeu;
+    private transient IVroomaniacs m_leJeu;
     private ImageIcon m_image;
     private boolean oldPosSet = false;
     public double m_centreX, m_centreY;
