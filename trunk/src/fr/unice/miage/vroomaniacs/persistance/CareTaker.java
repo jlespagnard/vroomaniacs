@@ -2,6 +2,11 @@ package fr.unice.miage.vroomaniacs.persistance;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author Michel CARTIER
+ *
+ */
 public class CareTaker
 {
 	/** Memento List */

@@ -65,7 +65,11 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	private	Joueur m_joueurSelectionne = null;
 	private Map<JCheckBox,ComportementPlugin> m_comportements = null;
 	private List<Dessinable> m_objetsAnimes = new LinkedList<Dessinable>();
+
+	private Vector<Joueur> lstLoad;
+
 	private JLabel nbTours = new JLabel();
+
 	
 	public Vroomaniacs() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -224,10 +228,6 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 						returnConfirm = JOptionPane.showConfirmDialog(Vroomaniacs.this, message, "Fichier existant", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 					}
 					if(returnConfirm == JFileChooser.APPROVE_OPTION) {
-						/*for(int i=0;i<m_joueurs.size();i++)
-						{
-							System.out.println(m_joueurs.get(i).getNom());
-						}*/
 						new Memento(m_joueurs,file);
 					}
 				}
@@ -236,6 +236,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		
 		JMenuItem itemLoad = new JMenuItem("Charger",new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/charger.png")));
 		menuSave.add(itemLoad);
+		lstLoad = new Vector<Joueur>();
 		itemLoad.addActionListener(new ActionListener() {
 			
 			@Override
@@ -245,11 +246,13 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 				int returnVal = fc.showOpenDialog(Vroomaniacs.this);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					m_joueurs = (Vector<Joueur>)Memento.objLoading(file);
-					/*for(int i=0;i<m_joueurs.size();i++)
+					lstLoad = new Vector<Joueur>();
+					lstLoad = (Vector<Joueur>)Memento.objLoading(file);
+					for(int i=0;i<lstLoad.size();i++)
 					{
-						System.out.println(m_joueurs.get(i).getNom());
-					}*/
+						lstLoad.get(i).getObjetAnime().setJeu(Vroomaniacs.this);
+					}
+					Vroomaniacs.this.debuterPartie(lstLoad);
 				}
 			}
 		});
@@ -412,5 +415,6 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	@Override
 	public IElement getElementDepart() {
 		return Circuit.getInstance().getElementDepart();
+
 	}	
 }
