@@ -168,8 +168,7 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     	}
     	m_oldxPos = m_xPos;
     	m_oldyPos = m_yPos;
-    	
-    	g.drawImage(this.m_image.getImage(),(int)this.m_xPos,(int)this.m_yPos,null);
+    	g.drawImage(this.m_image.getImage(),(int)this.m_xPos-this.m_image.getIconWidth()/2,(int)this.m_yPos-this.m_image.getIconHeight()/2,null);
     }
     
     @Override
