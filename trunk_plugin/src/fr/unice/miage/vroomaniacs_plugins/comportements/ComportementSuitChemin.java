@@ -16,7 +16,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	    public int indicePointCourant = 0;
 	    // On considere qu'un objet est passé au point de passage si la distance
 	    // de l'objet a  ce point est < une valeur donnee
-	    public int distanceValidationPassage = 30;
+	    public int distanceValidationPassage = 15;
 	    boolean circuitSet = false;
 	    
 	    public ComportementSuitChemin(){
@@ -30,6 +30,8 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	    public void deplace(ObjetAnimePlugin o) {
 	    	if(!this.circuitSet){
 	    		this.chemin = o.getJeu().getChemin();
+	    		this.chemin = Utils.multiplierPoints(this.chemin);
+	    		this.chemin = Utils.multiplierPoints(this.chemin);
 	    		this.circuitSet = true;
 	    	}
 	        // On recupere les coordonnees du prochain point de passage

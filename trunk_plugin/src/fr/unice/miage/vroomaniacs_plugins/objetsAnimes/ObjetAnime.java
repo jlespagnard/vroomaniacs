@@ -11,9 +11,10 @@ import javax.swing.ImageIcon;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
+import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePlugin, Serializable {
-    private double m_xPos, m_yPos;
+    private double m_xPos, m_yPos, m_oldxPos, m_oldyPos;
     private double m_direction = 2 * Math.PI * Math.random();
     private double m_vitesse = 5 * Math.random() + 3;
     private double m_acceleration = 0;
@@ -21,6 +22,9 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     private ArrayList<ComportementPlugin> m_listeDesComportements = new ArrayList<ComportementPlugin>();
     private IVroomaniacs m_leJeu;
     private ImageIcon m_image;
+    private boolean oldPosSet = false;
+    public double m_centreX, m_centreY;
+	double demiTaillePiste = Utils.ELEM_DIM.getWidth()/2;
 
     public ObjetAnime(String p_urlImage) {
     	this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
@@ -118,6 +122,8 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     @Override
 	public void setJeu(IVroomaniacs p_jeu) {
     	this.m_leJeu = p_jeu;
+    	m_centreX = Utils.getPointCentre(this.m_leJeu.getElementDepart()).getX();
+    	m_centreY = Utils.getPointCentre(this.m_leJeu.getElementDepart()).getY();
     }
 
     @Override
@@ -144,12 +150,25 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     
     @Override
     public void dessineToi(Graphics g) {
+    	if(!oldPosSet){
+        	m_oldxPos = m_xPos;
+        	m_oldyPos = m_yPos;
+    		oldPosSet = true;
+    	}
     	AffineTransform t = new AffineTransform();
     	t.translate(m_xPos, m_yPos);
     	t.rotate(m_direction);
     	t.translate(-m_xPos, -m_yPos);
     	((Graphics2D)g).setTransform(t);
-    	    	
+    	
+//    	On test si le joueur a passé un tour
+    	if((this.m_yPos > m_centreY - demiTaillePiste) && (this.m_yPos < m_centreY + demiTaillePiste) &&
+    			(this.m_oldxPos > m_centreX - demiTaillePiste) && (this.m_xPos <= m_centreX - demiTaillePiste)){
+    		this.m_leJeu.addTour(this);
+    	}
+    	m_oldxPos = m_xPos;
+    	m_oldyPos = m_yPos;
+    	
     	g.drawImage(this.m_image.getImage(),(int)this.m_xPos,(int)this.m_yPos,null);
     }
     

@@ -2,6 +2,8 @@ package fr.unice.miage.vroomaniacs_plugins.pluginsSDK;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IRoute;
@@ -19,6 +21,22 @@ public static final Dimension ELEM_DIM = new Dimension(80,80);
 		int y = Integer.parseInt(p_element.getId().split("_")[1]);
 		
 		return new Point(x, y);
+	}
+	
+	public static List<Point> multiplierPoints(List<Point> oldList){
+		List<Point> newList = new ArrayList<Point>();
+		Point point1 = oldList.get(0);
+		Point point2, tmp;
+		for(int i = 1; i < oldList.size(); i++){
+			newList.add(point1);
+			if(!(i == oldList.size()-1)){
+				point2 = oldList.get(i);
+				tmp = new Point((int)(point1.getX()+point2.getX())/2, (int)(point1.getY()+point2.getY())/2);
+				newList.add(tmp);
+				point1 = point2;
+			}
+		}		
+		return newList;
 	}
 
 	/**
