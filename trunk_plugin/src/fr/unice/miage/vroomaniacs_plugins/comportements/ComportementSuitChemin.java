@@ -33,6 +33,15 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	    		this.chemin = Utils.multiplierPoints(this.chemin);
 	    		this.chemin = Utils.multiplierPoints(this.chemin);
 	    		this.circuitSet = true;
+	    		//On trouve le point le plus proche au cas où le joueur ne serait pas sur la ligne de départ
+	    		double distance = Utils.distance(o.getXPos(), o.getYPos(), chemin.get(0).x, chemin.get(0).y) ;
+	    		for(int i = 1; i < chemin.size(); i++){
+	    			double tmp = Utils.distance(o.getXPos(), o.getYPos(), chemin.get(i).x, chemin.get(i).y);
+	    			if(distance > tmp){
+	    				distance = tmp;
+	    				indicePointCourant = i;
+	    			}
+	    		}
 	    	}
 	        // On recupere les coordonnees du prochain point de passage
 	        Point p = chemin.get(indicePointCourant);
