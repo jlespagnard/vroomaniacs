@@ -10,8 +10,6 @@ public abstract class Builder implements BuilderPlugin {
 	protected IElement m_element = null;
 	/** L'image repr&eacute;sentant l'&eacute;l&eacute;ment &agrave; construire. */
 	protected ImageIcon m_image = null;
-	/** L'URL de l'image repr&eacute;sentant l'&eacute;l&eacute;ment &agrave; construire */
-	protected String m_urlImage = null;
 
 	/**
 	 * Constructeur.
@@ -19,8 +17,7 @@ public abstract class Builder implements BuilderPlugin {
 	 * @param p_urlImage	l'URL de l'image repr&eacute;sentant l'&eacute;l&eacute;ment &agrave; construire
 	 */
 	protected Builder(String p_urlImage) {
-		this.m_urlImage = p_urlImage;
-		this.m_image = new ImageIcon(this.getClass().getResource(this.m_urlImage));
+		this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
 	}
 	
 	@Override
@@ -36,10 +33,5 @@ public abstract class Builder implements BuilderPlugin {
 	@Override
 	public ImageIcon getImage() {
 		return this.m_image;
-	}
-
-	@Override
-	public String getUrlImage() {
-		return this.m_urlImage;
 	}
 }

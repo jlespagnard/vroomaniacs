@@ -2,7 +2,7 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Moto extends ObjetAnime {
 	public Moto() {
-		super("imagesObjetsAnimes/moto.png",1.1);
+		super("/imagesObjetsAnimes/moto.png",1.1);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class BuilderVirageIG extends Builder {
 	 * Constructeur.
 	 */
 	public BuilderVirageIG() {
-		super("imagesElements/virage-inferieur-gauche.png");
+		super("/imagesElements/virage-inferieur-gauche.png");
 	}
 	
 	@Override

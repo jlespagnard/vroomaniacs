@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="VroomaniacsSDK" basedir=".">
+	<description>Projet POO - Master 1 MIAGE - 2010-2011 - SDK</description>
+	
+	<property name="src.dir" location="src"/>
+	<property name="resrc.dir" location="ressources"/>
+	<property name="bin.dir" location="bin"/>
+	<property name="dist.dir" location="dist"/>
+	<property name="lib.dir" location="lib"/>
+	
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${bin.dir}"/>
+	</target>
+	
+	<target name="compile" depends="init" description="Compilation des fichiers sources">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}">
+			<classpath>
+				<fileset dir="${lib.dir}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile" description="Creation du fichier jar executable">
+		<mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/Vroomaniacs_SDK.jar" basedir="${bin.dir}" filesetmanifest="mergewithoutmain">
+            <manifest>
+				<attribute name="Class-Path" value="."/>
+            </manifest>
+			<fileset dir="${resrc.dir}" includes="imagesElements/*.png"/>
+			<fileset dir="${resrc.dir}" includes="imagesObjetsAnimes/*.png"/>
+			<zipfileset excludes="META-INF/*.MF" src="${lib.dir}/libPlugins.jar"/>
+        </jar>
+	</target>
+	
+	<target name="clean" description="Nettoyage">
+		<delete dir="${bin.dir}"/>
+		<delete dir="${dist.dir}"/>
+	</target>
+</project>

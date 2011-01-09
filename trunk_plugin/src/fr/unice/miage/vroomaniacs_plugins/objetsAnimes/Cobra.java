@@ -2,7 +2,7 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Cobra extends ObjetAnime {
 	public Cobra() {
-		super("imagesObjetsAnimes/cobra.png",1);
+		super("/imagesObjetsAnimes/cobra.png",1);
 	}
 
 	@Override

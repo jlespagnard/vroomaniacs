@@ -2,7 +2,7 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Audi extends ObjetAnime {
 	public Audi() {
-		super("imagesObjetsAnimes/A3.png",1);
+		super("/imagesObjetsAnimes/A3.png",1);
 	}
 
 	@Override

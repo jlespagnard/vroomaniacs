@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Formule1 extends ObjetAnime implements Serializable {
 	public Formule1() {
-		super("imagesObjetsAnimes/formule1.png",1.5);
+		super("/imagesObjetsAnimes/formule1.png",1.5);
 	}
 
 	@Override

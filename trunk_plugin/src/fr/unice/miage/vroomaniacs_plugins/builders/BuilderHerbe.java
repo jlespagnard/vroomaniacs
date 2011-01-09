@@ -14,7 +14,7 @@ public class BuilderHerbe extends Builder {
 	 * @param p_urlImage	l'URL de l'image repr&eacute;sentant l'&eacute;l&eacute;ment &agrave; construire
 	 */
 	public BuilderHerbe() {
-		super("imagesElements/pelouse.png");
+		super("/imagesElements/pelouse.png");
 	}
 	
 	@Override

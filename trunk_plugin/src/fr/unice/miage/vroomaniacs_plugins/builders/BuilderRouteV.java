@@ -14,7 +14,7 @@ public class BuilderRouteV extends Builder {
 	 * Constructeur.
 	 */
 	public BuilderRouteV() {
-		super("imagesElements/route-verticale.png");
+		super("/imagesElements/route-verticale.png");
 	}
 
 	@Override

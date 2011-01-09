@@ -13,7 +13,7 @@ public class BuilderVirageID extends Builder {
 	 * Constructeur.
 	 */
 	public BuilderVirageID() {
-		super("imagesElements/virage-inferieur-droit.png");
+		super("/imagesElements/virage-inferieur-droit.png");
 	}
 	
 	@Override

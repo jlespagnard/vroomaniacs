@@ -13,7 +13,7 @@ public class BuilderRouteDepart extends Builder {
 	 * Constructeur.
 	 */
 	public BuilderRouteDepart() {
-		super("imagesElements/route-depart.png");
+		super("/imagesElements/route-depart.png");
 	}
 	
 	@Override

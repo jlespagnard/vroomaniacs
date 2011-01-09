@@ -2,7 +2,7 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Aviondechasse extends ObjetAnime {
 	public Aviondechasse() {
-		super("imagesObjetsAnimes/aviondechasse.png",1.8);
+		super("/imagesObjetsAnimes/aviondechasse.png",1.8);
 	}
 
 	@Override

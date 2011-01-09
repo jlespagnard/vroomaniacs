@@ -9,7 +9,7 @@ public class BuilderBriquesColorees extends Builder {
 	 * Constructeur
 	 */
 	public BuilderBriquesColorees() {
-		super("imagesElements/briques-colorees.png");
+		super("/imagesElements/briques-colorees.png");
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ public class BuilderRouteH extends Builder {
 	 * Constructeur.
 	 */
 	public BuilderRouteH() {
-		super("imagesElements/route-horizontale.png");
+		super("/imagesElements/route-horizontale.png");
 	}
 	
 	@Override

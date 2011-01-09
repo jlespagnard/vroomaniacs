@@ -14,10 +14,6 @@ public interface BuilderPlugin extends Plugin {
 	 */
 	public ImageIcon getImage();
 	/**
-	 * @return	l'URL de l'image repr&eacute;sentant l'&eacute;l&eacute;ment &agrave; construire
-	 */
-	public String getUrlImage();
-	/**
 	 * Cr&eacute;&eacute;e l'&eacute;l&eacute;ment
 	 * 
 	 * @param p_editeur	l'&eacute;diteur de cricuit dans lequel l'&eacute;l&eacute;ment sera cr&eacute;&eacute;
