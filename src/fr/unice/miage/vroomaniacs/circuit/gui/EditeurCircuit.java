@@ -147,7 +147,7 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 		JMenu menuFichier = new JMenu("Fichier");
 		menuBar.add(menuFichier);
 		
-		JMenuItem itemCharger = new JMenuItem("Charger", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/charger.png")));
+		JMenuItem itemCharger = new JMenuItem("Charger", new ImageIcon(this.getClass().getResource("/images/charger.png")));
 		menuFichier.add(itemCharger);
 		itemCharger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,KeyEvent.CTRL_DOWN_MASK));
 		itemCharger.addActionListener(new ActionListener() {
@@ -169,7 +169,7 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 			}
 		});
 		
-		JMenuItem itemSauvegarder = new JMenuItem("Sauvegarder", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/disquette.png")));
+		JMenuItem itemSauvegarder = new JMenuItem("Sauvegarder", new ImageIcon(this.getClass().getResource("/images/disquette.png")));
 		menuFichier.add(itemSauvegarder);
 		itemSauvegarder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,KeyEvent.CTRL_DOWN_MASK));
 		itemSauvegarder.addActionListener(new ActionListener() {
@@ -206,7 +206,7 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 		
 		menuFichier.addSeparator();
 		
-		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/quitter.png")));
+		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(this.getClass().getResource("/images/quitter.png")));
 		menuFichier.add(itemQuitter);
 		itemQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,KeyEvent.CTRL_DOWN_MASK));
 		itemQuitter.addActionListener(new ActionListener() {
@@ -219,7 +219,7 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 		JMenu menuEdition = new JMenu("Edition");
 		menuBar.add(menuEdition);
 		
-		JMenuItem itemChangerTailleGrille = new JMenuItem("Changer la taille de la grille", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/resize.png")));
+		JMenuItem itemChangerTailleGrille = new JMenuItem("Changer la taille de la grille", new ImageIcon(this.getClass().getResource("/images/resize.png")));
 		menuEdition.add(itemChangerTailleGrille);
 		itemChangerTailleGrille.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_N,KeyEvent.CTRL_DOWN_MASK));
 		itemChangerTailleGrille.addActionListener(new ActionListener() {
@@ -230,7 +230,7 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 			}
 		});
 		
-		JMenuItem itemNettoyerGrille = new JMenuItem("Nettoyer la grille", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/clear.png")));
+		JMenuItem itemNettoyerGrille = new JMenuItem("Nettoyer la grille", new ImageIcon(this.getClass().getResource("/images/clear.png")));
 		menuEdition.add(itemNettoyerGrille);
 		itemNettoyerGrille.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_DOWN_MASK));
 		itemNettoyerGrille.addActionListener(new ActionListener() {
@@ -250,7 +250,7 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 	 */
 	private void ajouterItemCircuit(final BuilderPlugin p_builder) {
 		JLabel label = new JLabel(p_builder.getImage());
-
+		
 		label.setToolTipText(p_builder.getName());
 		this.m_panelLabels.add(label);
 		

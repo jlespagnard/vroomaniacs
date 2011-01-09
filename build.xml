@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="Vroomaniacs" basedir=".">
+	<description>Projet POO - Master 1 MIAGE - 2010-2011</description>
+	
+	<property name="src.dir" location="src"/>
+	<property name="resrc.dir" location="ressources"/>
+	<property name="bin.dir" location="bin"/>
+	<property name="dist.dir" location="dist"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="plugins.dir" location="plugins"/>
+	
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${bin.dir}"/>
+	</target>
+	
+	<target name="compile" depends="init" description="Compilation des fichiers sources">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}">
+			<classpath>
+				<fileset dir="${lib.dir}"/>
+				<fileset dir="${plugins.dir}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile" description="Creation du fichier jar executable">
+		<mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/Vroomaniacs.jar" basedir="${bin.dir}" filesetmanifest="mergewithoutmain">
+            <manifest>
+				<attribute name="Class-Path" value="."/>
+				<attribute name="Main-Class" value="fr.unice.miage.vroomaniacs.gui.Vroomaniacs"/>
+            </manifest>
+			<fileset dir="${resrc.dir}" includes="images/*.png"/>
+			<zipfileset excludes="META-INF/*.MF" src="${lib.dir}/libPlugins.jar"/>
+			<zipfileset excludes="META-INF/*.MF" src="${plugins.dir}/Vroomaniacs_SDK.jar"/>
+        </jar>
+		<copy todir="dist">
+			<fileset dir=".">
+				<include name="plugins/*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="clean" description="Nettoyage">
+		<delete dir="${bin.dir}"/>
+		<delete dir="${dist.dir}"/>
+	</target>
+	
+	<target name="run" depends="jar">
+        <java jar="${dist.dir}/Vroomaniacs.jar" fork="true"/>
+    </target>
+</project>
