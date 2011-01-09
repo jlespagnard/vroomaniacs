@@ -10,7 +10,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
-
+/**
+ * 
+ * @author Michel CARTIER
+ *
+ */
 public class Memento 
 {
 	/** Object to save, must implements Serializable */
@@ -56,14 +60,12 @@ public class Memento
 	 * @return l'objet charge*/
 	public static Serializable objLoading(File p_file)
 	{
-		Circuit circuit = Circuit.getInstance();
+		Serializable obj = null;
 		try {
 			FileInputStream fis;
 			fis = new FileInputStream(p_file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			Object obj = ois.readObject();
-			circuit = (Circuit) obj;
-			//System.out.println("load :"+circuit.toString());
+			obj = (Serializable)ois.readObject();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -71,9 +73,6 @@ public class Memento
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		finally
-		{
-			return circuit;
-		}
+		return obj;
 	}
 }
