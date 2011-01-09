@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import fr.unice.miage.vroomaniacs_plugins.comportements.ComportementBoost;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
@@ -16,7 +17,8 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePlugin, Serializable {
     private double m_xPos, m_yPos, m_oldxPos, m_oldyPos;
     private double m_direction = 2 * Math.PI * Math.random();
-    private double m_vitesse = 5 * Math.random() + 3;
+    private double m_vitesse = 2;
+    private double m_vitesseOriginale;
     private double m_acceleration = 0;
     private double m_accelerationAngulaire = 0;
     private ArrayList<ComportementPlugin> m_listeDesComportements = new ArrayList<ComportementPlugin>();
@@ -32,7 +34,8 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     
     public ObjetAnime(String p_urlImage,double coef_vitesse) {
     	this.m_image = new ImageIcon(this.getClass().getResource(p_urlImage));
-    	this.setVitesse(m_vitesse * coef_vitesse); 		
+    	this.setVitesse(getVitesse() * coef_vitesse);
+    	m_vitesseOriginale = getVitesse();
     }
     
     @Override
@@ -160,6 +163,14 @@ public abstract class ObjetAnime implements Dessinable, Deplacable, ObjetAnimePl
     	t.rotate(m_direction);
     	t.translate(-m_xPos, -m_yPos);
     	((Graphics2D)g).setTransform(t);
+    	
+    	boolean boostSet = false;
+    	for(ComportementPlugin cp : this.m_listeDesComportements){
+    		if(cp.getClass()==ComportementBoost.class)
+    			boostSet = true;
+    	}
+    	if(!boostSet)
+    		this.setVitesse(m_vitesseOriginale);
     	
 //    	On test si le joueur a passé un tour
     	if((this.m_yPos > m_centreY - demiTaillePiste) && (this.m_yPos < m_centreY + demiTaillePiste) &&

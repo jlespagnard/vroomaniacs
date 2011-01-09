@@ -4,7 +4,8 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ObjetAnimePlugin;
 
 public class ComportementBoost implements ComportementPlugin{
-	private boolean boostDone = false;
+	public boolean boostDone = false;
+	private double m_newVitesse;
 	
 	public ComportementBoost(){
 	}
@@ -42,9 +43,10 @@ public class ComportementBoost implements ComportementPlugin{
 	@Override
 	public void deplace(ObjetAnimePlugin o) {
 		if(!this.boostDone){
-			o.setVitesse(o.getVitesse()*1.5);
+			m_newVitesse = (o.getVitesse()*1.5);
 			this.boostDone = true;
 		}
+		o.setVitesse(m_newVitesse);
 	}
 	
 	@Override

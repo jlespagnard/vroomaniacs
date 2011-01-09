@@ -2,7 +2,7 @@ package fr.unice.miage.vroomaniacs_plugins.objetsAnimes;
 
 public class Vaisseau extends ObjetAnime {
 	public Vaisseau() {
-		super("imagesObjetsAnimes/vaisseau.png",2);
+		super("imagesObjetsAnimes/vaisseau.png",3);
 	}
 
 	@Override
