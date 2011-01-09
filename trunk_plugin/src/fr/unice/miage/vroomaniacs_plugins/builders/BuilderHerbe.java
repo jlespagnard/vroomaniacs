@@ -10,8 +10,6 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IEditeurCircuit;
 public class BuilderHerbe extends Builder {
 	/**
 	 * Constructeur.
-	 * 
-	 * @param p_urlImage	l'URL de l'image repr&eacute;sentant l'&eacute;l&eacute;ment &agrave; construire
 	 */
 	public BuilderHerbe() {
 		super("/imagesElements/pelouse.png");

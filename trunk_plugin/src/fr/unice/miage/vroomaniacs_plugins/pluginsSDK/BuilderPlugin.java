@@ -16,8 +16,8 @@ public interface BuilderPlugin extends Plugin {
 	/**
 	 * Cr&eacute;&eacute;e l'&eacute;l&eacute;ment
 	 * 
-	 * @param p_editeur	l'&eacute;diteur de cricuit dans lequel l'&eacute;l&eacute;ment sera cr&eacute;&eacute;
-	 * @param p_id	l'ID de l'&eacute;l&eacute;ment
+	 * @param p_editeurCircuit	l'&eacute;diteur de cricuit dans lequel l'&eacute;l&eacute;ment sera cr&eacute;&eacute;
+	 * @param p_idElement	l'ID de l'&eacute;l&eacute;ment
 	 */
 	public void creerElement(IEditeurCircuit p_editeurCircuit,String p_idElement);
 }

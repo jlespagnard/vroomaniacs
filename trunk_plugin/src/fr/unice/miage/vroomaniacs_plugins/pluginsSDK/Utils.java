@@ -173,7 +173,7 @@ public static final Dimension ELEM_DIM = new Dimension(80,80);
      * Teste si deux objets sont en collision. Le test fait appel aux bounding boxes
      * @param d1
      * @param d2
-     * @return
+     * @return {@link Boolean}
      */
     public static boolean collision(ObjetAnimePlugin d1, ObjetAnimePlugin d2) {
         // PREMIERE METHODE LENTE A CAUSE d'un NEW !
