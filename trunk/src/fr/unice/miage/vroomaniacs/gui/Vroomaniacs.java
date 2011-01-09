@@ -13,6 +13,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
@@ -34,11 +35,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
-import javax.swing.border.Border;
 
 import fr.unice.miage.vroomaniacs.circuit.BufferedCircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
-import fr.unice.miage.vroomaniacs.circuit.gui.EditeurCircuit;
 import fr.unice.miage.vroomaniacs.circuit.gui.MenuEditeurCircuit;
 import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
@@ -80,11 +79,16 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		
-		try {
-			pluginManager.addJarURLsInDirectories(new URL[]{new URL("file:plugins")});
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			this.dispose();
+		try {			
+			URL urlPlugins = new URL("file:plugins");
+			try {
+				urlPlugins.openStream();
+			} catch (IOException e) {
+				urlPlugins = new URL("file:ressources/plugins");
+			}
+			pluginManager.addJarURLsInDirectories(new URL[]{urlPlugins});
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
 		}
 		pluginManager.loadPlugins();
 		
@@ -157,12 +161,10 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		JMenuBar menu = new JMenuBar();
 		this.add(menu, BorderLayout.NORTH);
 		
-		
-		
 		JMenu menuFichier = new JMenu("Fichier");
 		menu.add(menuFichier);
 		
-		JMenuItem itemNouvellePartie = new JMenuItem("Nouvelle partie", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/drapeau-damier.png")));
+		JMenuItem itemNouvellePartie = new JMenuItem("Nouvelle partie", new ImageIcon(this.getClass().getResource("/images/drapeau-damier.png")));
 		menuFichier.add(itemNouvellePartie);
 		itemNouvellePartie.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,KeyEvent.CTRL_DOWN_MASK));
 		itemNouvellePartie.addActionListener(new ActionListener() {
@@ -186,7 +188,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		
 		menuFichier.addSeparator();
 		
-		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/quitter.png")));
+		JMenuItem itemQuitter = new JMenuItem("Quitter", new ImageIcon(this.getClass().getResource("/images/quitter.png")));
 		itemQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,KeyEvent.CTRL_DOWN_MASK));
 		menuFichier.add(itemQuitter);
 		itemQuitter.addActionListener(new ActionListener() {
@@ -199,7 +201,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		JMenu menuOutils = new JMenu("Outils");
 		menu.add(menuOutils);
 		
-		JMenuItem itemEditerCircuit = new JMenuItem("Editer un circuit", new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/editer.png")));
+		JMenuItem itemEditerCircuit = new JMenuItem("Editer un circuit", new ImageIcon(this.getClass().getResource("/images/editer.png")));
 		menuOutils.add(itemEditerCircuit);
 		itemEditerCircuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,KeyEvent.CTRL_DOWN_MASK));
 		itemEditerCircuit.addActionListener(new ActionListener() {
@@ -211,7 +213,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		
 		JMenu menuSave = new JMenu("Persistance");
 		menu.add(menuSave);
-		JMenuItem itemSave = new JMenuItem("Sauvegarder",new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/disquette.png")));
+		JMenuItem itemSave = new JMenuItem("Sauvegarder",new ImageIcon(this.getClass().getResource("/images/disquette.png")));
 		menuSave.add(itemSave);
 		itemSave.addActionListener(new ActionListener() {
 			
@@ -234,7 +236,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 			}
 		});
 		
-		JMenuItem itemLoad = new JMenuItem("Charger",new ImageIcon(Toolkit.getDefaultToolkit().getImage("./images/charger.png")));
+		JMenuItem itemLoad = new JMenuItem("Charger",new ImageIcon(this.getClass().getResource("/images/charger.png")));
 		menuSave.add(itemLoad);
 		lstLoad = new Vector<Joueur>();
 		itemLoad.addActionListener(new ActionListener() {
@@ -319,8 +321,6 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 				construireCheckBoxComportements();
 			}
 		});
-		
-		this.construireCheckBoxComportements();
 		
 		this.m_scrollPanelEst.repaint();
 		this.m_scrollPanelEst.validate();
