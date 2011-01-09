@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.border.Border;
 
 import fr.unice.miage.vroomaniacs.circuit.BufferedCircuitPanel;
 import fr.unice.miage.vroomaniacs.circuit.Circuit;
@@ -64,6 +65,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	private	Joueur m_joueurSelectionne = null;
 	private Map<JCheckBox,ComportementPlugin> m_comportements = null;
 	private List<Dessinable> m_objetsAnimes = new LinkedList<Dessinable>();
+	private JLabel nbTours = new JLabel();
 	
 	public Vroomaniacs() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -125,8 +127,12 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		this.m_panelComportements = new JPanel(new GridLayout(this.m_comportements.size()+1,1));
 		JPanel panelNorthEst = new JPanel(new BorderLayout());
 		panelNorthEst.add(this.m_panelComportements,BorderLayout.NORTH);
-		panelNorthEst.add(jl);
+		panelNorthEst.add(jl,BorderLayout.SOUTH);
+		JPanel afficheTour = new JPanel(new BorderLayout());
+		afficheTour.add(jl,BorderLayout.WEST);
+		afficheTour.add(nbTours, BorderLayout.EAST);
 		panelEst.add(panelNorthEst,BorderLayout.CENTER);
+		panelEst.add(afficheTour, BorderLayout.SOUTH);
 		
 		this.pack();
 		this.setVisible(true);
@@ -281,6 +287,7 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
 					m_joueurSelectionne = (Joueur)e.getItem();
+					nbTours.setText(String.valueOf(m_joueurSelectionne.m_nbTours>0?m_joueurSelectionne.m_nbTours:0));
 					JCheckBox chk;
 					ComportementPlugin comportement;
 					for(Map.Entry<JCheckBox, ComportementPlugin> entry : m_comportements.entrySet()) {
@@ -385,10 +392,12 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		for(Joueur j : m_joueurs){
 			if(j.getObjetAnime() == arg0){
 				j.m_nbTours++;
+				if(this.m_joueurSelectionne == j)
+					this.nbTours.setText(String.valueOf(j.m_nbTours>0?m_joueurSelectionne.m_nbTours:0));
 			}
 		}
 	}
-
+	
 	@Override
 	public IElement getElementDepart() {
 		return Circuit.getInstance().getElementDepart();
