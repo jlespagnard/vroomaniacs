@@ -97,10 +97,21 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 					public void actionPerformed(ActionEvent e) {
 						JCheckBox source = (JCheckBox)e.getSource();
 						if(source.isSelected()) {
-							m_joueurSelectionne.getObjetAnime().ajouterComportement(m_comportements.get(source));
+							ComportementPlugin tmp = m_comportements.get(source);
+							Class newComportement = tmp.getClass();
+							try{
+								m_joueurSelectionne.getObjetAnime().ajouterComportement((ComportementPlugin)newComportement.newInstance());
+							}catch(Exception exc){
+							}
 						}
 						else {
-							m_joueurSelectionne.getObjetAnime().supprimerComportement(m_comportements.get(source));
+							try{
+								for (ComportementPlugin p : m_joueurSelectionne.getObjetAnime().getComportements()){
+									if(p.getClass() == m_comportements.get(source).getClass())
+										m_joueurSelectionne.getObjetAnime().supprimerComportement(p);
+								}
+							}catch(Exception exc){
+							}
 						}
 						construireCheckBoxComportements();
 					}
