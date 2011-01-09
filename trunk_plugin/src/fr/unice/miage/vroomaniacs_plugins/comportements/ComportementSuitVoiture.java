@@ -35,8 +35,9 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	    		if(!m_voitureSet){
 	    			int index = o.getJeu().getListeObjetDessinable().indexOf(o);
 	    			//	On suit soit le joueur entré avant nous ou le dernier arrivé si on est le premier arrivé
-	    			this.m_voitureASuivre = index==0?(ObjetAnime)o.getJeu().getListeObjetDessinable().get(o.getJeu().getListeObjetDessinable().size()-1):(ObjetAnime)o.getJeu().getListeObjetDessinable().get(index);
+	    			this.m_voitureASuivre = index==0?(ObjetAnime)o.getJeu().getListeObjetDessinable().get(o.getJeu().getListeObjetDessinable().size()-1):(ObjetAnime)o.getJeu().getListeObjetDessinable().get(index-1);
 	    			m_voitureSet = true;
+	    			System.out.println(m_voitureASuivre.getName());
 	    		} else {
 	    			//Si on est proche de la voiture à suivre, on se calle sur sa vitesse et son chemin
 	    			if (Utils.distance(o.getXPos(), o.getYPos(), (int)m_voitureASuivre.getXPos(),(int)m_voitureASuivre.getYPos()) < distanceValidationPassage) {
@@ -65,7 +66,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 
 		@Override
 		public String getDescription() {
-			return "Comportement Suit Voiture : La voiture suit le chemin de base ";
+			return "Comportement Suit Voiture : La voiture suit une des voitures du jeu si il y en a une autre ";
 		}
 
 		@Override
