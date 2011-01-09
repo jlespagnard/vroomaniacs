@@ -245,7 +245,6 @@ public class EditeurCircuit extends JFrame implements IEditeurCircuit {
 	/**
 	 * Ajoute un item pour l'&eacute;dition de circuit.
 	 * 
-	 * @param p_urlImage	l'URL de l'image &agrave; utiliser pour repr&eacute;senter l'item
 	 * @param p_builder		le builder &agrave; utiliser pour cr&eacute; l'&eacute;l&eacute;ment dans le circuit
 	 */
 	private void ajouterItemCircuit(final BuilderPlugin p_builder) {
