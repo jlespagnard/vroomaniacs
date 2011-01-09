@@ -28,6 +28,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 	    }
 
 	    public void deplace(ObjetAnimePlugin o) {
+
 	    	if(!this.circuitSet){
 	    		this.chemin = o.getJeu().getChemin();
 	    		this.chemin = Utils.multiplierPoints(this.chemin);
