@@ -10,6 +10,7 @@ import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.Utils;
 public class Joueur {
 	private String m_nom;
 	private ObjetAnimePlugin m_objetAnime;
+	public int m_nbTours = 0;
 	
 	public Joueur(String p_nom,ObjetAnimePlugin p_objetAnime, Vroomaniacs jeu) {
 		this.m_nom = p_nom;

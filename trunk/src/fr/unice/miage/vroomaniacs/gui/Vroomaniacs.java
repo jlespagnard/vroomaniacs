@@ -42,6 +42,7 @@ import fr.unice.miage.vroomaniacs.partie.Joueur;
 import fr.unice.miage.vroomaniacs.persistance.Memento;
 import fr.unice.miage.vroomaniacs_plugins.builders.element.Element;
 import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.Dessinable;
+import fr.unice.miage.vroomaniacs_plugins.objetsAnimes.ObjetAnime;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.ComportementPlugin;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IElement;
 import fr.unice.miage.vroomaniacs_plugins.pluginsSDK.IVroomaniacs;
@@ -377,5 +378,19 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 	@Override
 	public List<Point> getChemin() {
 		return Circuit.getInstance().getChemin();
+	}
+
+	@Override
+	public void addTour(ObjetAnime arg0) {
+		for(Joueur j : m_joueurs){
+			if(j.getObjetAnime() == arg0){
+				j.m_nbTours++;
+			}
+		}
+	}
+
+	@Override
+	public IElement getElementDepart() {
+		return Circuit.getInstance().getElementDepart();
 	}	
 }
