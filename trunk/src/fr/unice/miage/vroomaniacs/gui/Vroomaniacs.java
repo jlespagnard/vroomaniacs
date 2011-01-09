@@ -26,6 +26,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -52,7 +53,7 @@ import fr.unice.plugin.PluginManager;
 
 @SuppressWarnings("serial")
 public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
-	private final int TEMPS_ENTRE_IMAGES = 100;
+	private final int TEMPS_ENTRE_IMAGES = 10;
 	public final static PluginManager pluginManager = PluginManager.getPluginManager();;
 	
 	private JPanel m_circuitPanel = null;
@@ -120,13 +121,12 @@ public class Vroomaniacs extends JFrame implements Runnable, IVroomaniacs {
 		
 		this.m_panelJoueurs = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panelEst.add(this.m_panelJoueurs,BorderLayout.NORTH);
-		
+		JLabel jl = new JLabel("Nombre de tours parcourus");	
 		this.m_panelComportements = new JPanel(new GridLayout(this.m_comportements.size()+1,1));
 		JPanel panelNorthEst = new JPanel(new BorderLayout());
 		panelNorthEst.add(this.m_panelComportements,BorderLayout.NORTH);
+		panelNorthEst.add(jl);
 		panelEst.add(panelNorthEst,BorderLayout.CENTER);
-		
-		
 		
 		this.pack();
 		this.setVisible(true);
